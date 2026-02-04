@@ -1,0 +1,23 @@
+{
+    "name": "TFramework.Sample",
+    "rootNamespace": "TFramework.Sample",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.Pool",
+        "TFramework.Resource",
+        "TFramework.Installer",
+        "UniTask",
+        "R3.Unity",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

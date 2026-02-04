@@ -1,0 +1,24 @@
+{
+    "name": "TFramework.Resource",
+    "rootNamespace": "TFramework.Resource",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.Pool",
+        "UniTask",
+        "UniTask.Addressables",
+        "R3.Unity",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

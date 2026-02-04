@@ -1,0 +1,22 @@
+{
+    "name": "TFramework.Installer",
+    "rootNamespace": "TFramework.Installer",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.Pool",
+        "TFramework.Resource",
+        "UniTask",
+        "R3.Unity",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
