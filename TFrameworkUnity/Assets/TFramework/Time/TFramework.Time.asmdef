@@ -1,16 +1,10 @@
 {
-    "name": "TFramework.Installer",
-    "rootNamespace": "TFramework.Installer",
+    "name": "TFramework.Time",
+    "rootNamespace": "TFramework.Time",
     "references": [
         "TFramework.Core",
         "TFramework.Debug",
-        "TFramework.Pool",
-        "TFramework.Resource",
-        "TFramework.UI",
-        "TFramework.Localization",
-        "TFramework.Time",
         "UniTask",
-        "R3.Unity",
         "VContainer"
     ],
     "includePlatforms": [],

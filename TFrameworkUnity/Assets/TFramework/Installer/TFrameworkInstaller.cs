@@ -3,6 +3,7 @@ using TFramework.Debug;
 using TFramework.Localization;
 using TFramework.Pool;
 using TFramework.Resource;
+using TFramework.Time;
 using TFramework.UI;
 using VContainer;
 
@@ -54,6 +55,14 @@ namespace TFramework.Installer
             // Localization
             builder.Register<LocalizationManager>(Lifetime.Singleton)
                 .As<ILocalizationService>()
+                .As<IInitializable>();
+
+            // Time Settings
+            builder.RegisterInstance(TimeSettings.Instance);
+            
+            // Time
+            builder.Register<TimeManager>(Lifetime.Singleton)
+                .As<ITimeService>()
                 .As<IInitializable>();
 
             // 登録完了ログ
