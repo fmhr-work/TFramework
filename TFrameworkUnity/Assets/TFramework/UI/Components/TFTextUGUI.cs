@@ -115,6 +115,14 @@ namespace TFramework.UI
             _useLocalization = true;
             _localizationKey = key;
             _localizationParameters = parameters;
+            
+            // サブスクリプションがなければ登録
+            if (_localization != null && _languageChangedSubscription == null)
+            {
+                _languageChangedSubscription = _localization.OnLanguageChanged
+                    .Subscribe(_ => UpdateLocalizedText());
+            }
+
             UpdateLocalizedText();
         }
         #endregion

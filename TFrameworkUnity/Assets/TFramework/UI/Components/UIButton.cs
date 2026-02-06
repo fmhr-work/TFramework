@@ -11,7 +11,7 @@ namespace TFramework.UI
     /// クリック、長押し、ポインター状態をObservableで通知する
     /// </summary>
     [AddComponentMenu("TFramework/UI/TF Button")]
-    public sealed class UIButton : Button, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+    public sealed class UIButton : Button
     {
         #region Serialized Fields
         [Header("Extended Settings")]
@@ -54,7 +54,7 @@ namespace TFramework.UI
                 return;
 
             // 基底Buttonのクリックイベントを購読
-            this.OnClickAsObservable()
+            onClick.AsObservable()
                 .Subscribe(_ => _onClickSubject.OnNext(Unit.Default))
                 .AddTo(this);
 
@@ -82,9 +82,11 @@ namespace TFramework.UI
         public Observable<bool> OnPointerEnterAsObservable() => _onPointerEnterSubject;
         #endregion
 
-        #region IPointerHandlers
-        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        #region Pointer Event Overrides
+        public override void OnPointerDown(PointerEventData eventData)
         {
+            base.OnPointerDown(eventData); // 基底クラスの視覚フィードバックを保持
+            
             if (!interactable)
                 return;
 
@@ -103,20 +105,24 @@ namespace TFramework.UI
                 });
         }
 
-        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        public override void OnPointerUp(PointerEventData eventData)
         {
+            base.OnPointerUp(eventData); // 基底クラスの視覚フィードバックを保持
+            
             _isPointerDown = false;
             _onPointerDownSubject.OnNext(false);
             _longPressDisposable?.Dispose();
         }
 
-        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+        public override void OnPointerEnter(PointerEventData eventData)
         {
+            base.OnPointerEnter(eventData); // 基底クラスの視覚フィードバックを保持
             _onPointerEnterSubject.OnNext(true);
         }
 
-        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
+        public override void OnPointerExit(PointerEventData eventData)
         {
+            base.OnPointerExit(eventData); // 基底クラスの視覚フィードバックを保持
             _onPointerEnterSubject.OnNext(false);
         }
         #endregion

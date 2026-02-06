@@ -3,7 +3,8 @@
     "rootNamespace": "TFramework.UI.Editor",
     "references": [
         "TFramework.UI",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.TextMeshPro.Editor"
     ],
     "includePlatforms": [
         "Editor"
