@@ -179,6 +179,47 @@ namespace TFramework.Resource
         }
 
         /// <inheritdoc/>
+        public async UniTask<T> InstantiateAsync<T>(string address, Transform parent, CancellationToken ct) where T : Component
+        {
+            return await InstantiateAsync<T>(address, Vector3.zero, Quaternion.identity, parent, ct);
+        }
+
+        /// <inheritdoc/>
+        public async UniTask<T> InstantiateAsync<T>(string address, Vector3 position, Quaternion rotation, Transform parent, CancellationToken ct) where T : Component
+        {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException(nameof(AddressableResourceService));
+            }
+
+            try
+            {
+                var handle = Addressables.InstantiateAsync(address, position, rotation, parent);
+                var instance = await handle.ToUniTask(cancellationToken: ct);
+
+                if (instance == null)
+                {
+                    throw new InvalidOperationException($"Failed to instantiate: {address}");
+                }
+
+                if (!instance.TryGetComponent<T>(out var component))
+                {
+                    Addressables.ReleaseInstance(instance);
+                    throw new InvalidOperationException($"Component {typeof(T).Name} not found on prefab: {address}");
+                }
+
+                TLogger.Debug($"Instantiated with component: {address} ({typeof(T).Name})", "Resource");
+
+                return component;
+            }
+            catch (Exception ex)
+            {
+                TLogger.Error($"Failed to instantiate with component {typeof(T).Name}: {address}", ex, "Resource");
+                throw;
+            }
+        }
+
+        /// <inheritdoc/>
         public async UniTask LoadSceneAsync(string address, LoadSceneMode mode, CancellationToken ct)
         {
             if (_isDisposed)
@@ -226,6 +267,26 @@ namespace TFramework.Resource
 
                     TLogger.Debug($"Released by address: {address}", "Resource");
                 }
+            }
+        }
+
+        /// <inheritdoc/>
+        public void ReleaseInstance(GameObject instance)
+        {
+            if (instance == null)
+            {
+                TLogger.Warning("Attempted to release null GameObject instance", "Resource");
+                return;
+            }
+
+            try
+            {
+                Addressables.ReleaseInstance(instance);
+                TLogger.Debug($"Released instance: {instance.name}", "Resource");
+            }
+            catch (Exception ex)
+            {
+                TLogger.Error($"Failed to release instance: {instance.name}", ex, "Resource");
             }
         }
 

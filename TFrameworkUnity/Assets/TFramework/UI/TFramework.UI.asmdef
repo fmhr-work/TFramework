@@ -1,15 +1,15 @@
 {
-    "name": "TFramework.Installer",
-    "rootNamespace": "TFramework.Installer",
+    "name": "TFramework.UI",
+    "rootNamespace": "TFramework.UI",
     "references": [
         "TFramework.Core",
         "TFramework.Debug",
-        "TFramework.Pool",
         "TFramework.Resource",
-        "TFramework.UI",
+        "TFramework.Pool",
         "UniTask",
         "R3.Unity",
-        "VContainer"
+        "VContainer",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

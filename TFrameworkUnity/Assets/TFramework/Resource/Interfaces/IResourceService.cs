@@ -47,6 +47,18 @@ namespace TFramework.Resource
         UniTask<GameObject> InstantiateAsync(string address, Vector3 position, Quaternion rotation, Transform parent, CancellationToken ct);
 
         /// <summary>
+        /// プレハブをインスタンス化して指定コンポーネントを取得する
+        /// </summary>
+        /// <typeparam name="T">取得するコンポーネントの型</typeparam>
+        UniTask<T> InstantiateAsync<T>(string address, Transform parent, CancellationToken ct) where T : Component;
+
+        /// <summary>
+        /// プレハブをインスタンス化して指定コンポーネントを取得する（位置・回転指定）
+        /// </summary>
+        /// <typeparam name="T">取得するコンポーネントの型</typeparam>
+        UniTask<T> InstantiateAsync<T>(string address, Vector3 position, Quaternion rotation, Transform parent, CancellationToken ct) where T : Component;
+
+        /// <summary>
         /// シーンを非同期でロードする
         /// </summary>
         UniTask LoadSceneAsync(string address, LoadSceneMode mode, CancellationToken ct);
@@ -60,6 +72,11 @@ namespace TFramework.Resource
         /// アドレスで指定されたアセットを解放する
         /// </summary>
         void ReleaseByAddress(string address);
+
+        /// <summary>
+        /// InstantiateAsyncで生成されたGameObjectを解放する
+        /// </summary>
+        void ReleaseInstance(GameObject instance);
 
         /// <summary>
         /// ダウンロードサイズを取得する

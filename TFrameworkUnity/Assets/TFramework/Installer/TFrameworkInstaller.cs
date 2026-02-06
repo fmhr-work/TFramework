@@ -2,6 +2,7 @@ using TFramework.Core;
 using TFramework.Debug;
 using TFramework.Pool;
 using TFramework.Resource;
+using TFramework.UI;
 using VContainer;
 
 namespace TFramework.Installer
@@ -35,8 +36,16 @@ namespace TFramework.Installer
                 .As<IResourceService>()
                 .As<IInitializable>();
 
+            // UI Settings
+            builder.RegisterInstance(UISettings.Instance);
+
+            // UI
+            builder.Register<UIManager>(Lifetime.Singleton)
+                .As<IUIService>()
+                .As<IInitializable>();
+
             // 登録完了ログ
-            TLogger.Info("TFramework services installed.", "Installer");
+            TLogger.Info("TFramework services installed", "Installer");
         }
 
         /// <summary>
