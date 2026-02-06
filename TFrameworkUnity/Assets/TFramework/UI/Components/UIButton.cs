@@ -10,14 +10,11 @@ namespace TFramework.UI
     /// R3対応UIボタン
     /// クリック、長押し、ポインター状態をObservableで通知する
     /// </summary>
-    [RequireComponent(typeof(Button))]
-    public sealed class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+    [AddComponentMenu("TFramework/UI/TF Button")]
+    public sealed class UIButton : Button, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         #region Serialized Fields
-        [Header("Button Settings")]
-        [SerializeField]
-        private Button _button;
-
+        [Header("Extended Settings")]
         [SerializeField]
         [Range(0.1f, 3f)]
         private float _longPressDuration = 0.5f;
@@ -35,15 +32,15 @@ namespace TFramework.UI
         #endregion
 
         #region Properties
-        public Button Button => _button;
-        public bool Interactable
+        /// <summary>
+        /// Buttonとしてアクセス用（互換性維持）
+        /// </summary>
+        public Button Button => this;
+        
+        public new bool interactable
         {
-            get => _button != null && _button.interactable;
-            set
-            {
-                if (_button != null)
-                    _button.interactable = value;
-            }
+            get => base.interactable;
+            set => base.interactable = value;
         }
         #endregion
 
@@ -56,12 +53,10 @@ namespace TFramework.UI
             if (_isInitialized)
                 return;
 
-            if (_button != null)
-            {
-                _button.OnClickAsObservable()
-                    .Subscribe(_ => _onClickSubject.OnNext(Unit.Default))
-                    .AddTo(this);
-            }
+            // 基底Buttonのクリックイベントを購読
+            this.OnClickAsObservable()
+                .Subscribe(_ => _onClickSubject.OnNext(Unit.Default))
+                .AddTo(this);
 
             _isInitialized = true;
         }
@@ -90,7 +85,7 @@ namespace TFramework.UI
         #region IPointerHandlers
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (!Interactable)
+            if (!interactable)
                 return;
 
             _isPointerDown = true;
@@ -127,7 +122,7 @@ namespace TFramework.UI
         #endregion
 
         #region Cleanup
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             _longPressDisposable?.Dispose();
             _onClickSubject.Dispose();
