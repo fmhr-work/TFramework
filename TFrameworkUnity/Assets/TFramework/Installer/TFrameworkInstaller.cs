@@ -1,5 +1,6 @@
 using TFramework.Core;
 using TFramework.Debug;
+using TFramework.Localization;
 using TFramework.Pool;
 using TFramework.Resource;
 using TFramework.UI;
@@ -42,6 +43,17 @@ namespace TFramework.Installer
             // UI
             builder.Register<UIManager>(Lifetime.Singleton)
                 .As<IUIService>()
+                .As<IInitializable>();
+
+            // Localization Settings
+            builder.RegisterInstance(LocalizationSettings.Instance);
+
+            // Localization Provider
+            builder.Register<CsvLocalizationProvider>(Lifetime.Singleton).As<ILocalizationProvider>();
+
+            // Localization
+            builder.Register<LocalizationManager>(Lifetime.Singleton)
+                .As<ILocalizationService>()
                 .As<IInitializable>();
 
             // 登録完了ログ

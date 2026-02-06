@@ -6,6 +6,7 @@
         "TFramework.Debug",
         "TFramework.Resource",
         "TFramework.Pool",
+        "TFramework.Localization",
         "UniTask",
         "R3.Unity",
         "VContainer",

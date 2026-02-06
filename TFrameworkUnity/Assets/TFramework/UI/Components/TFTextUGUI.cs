@@ -2,8 +2,10 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
+using TFramework.Localization;
 using TMPro;
 using UnityEngine;
+using VContainer;
 
 namespace TFramework.UI
 {
@@ -15,11 +17,20 @@ namespace TFramework.UI
     public sealed class TFTextUGUI : TextMeshProUGUI
     {
         #region Serialized Fields
-        [Header("Extended Settings")]
+        [Header("Localization")]
         [SerializeField]
-        [Tooltip("ローカライズキーを使用する場合に設定")]
+        [Tooltip("ローカライズを使用")]
+        private bool _useLocalization;
+
+        [SerializeField]
+        [Tooltip("ローカライズキー")]
         private string _localizationKey;
 
+        [SerializeField]
+        [Tooltip("ローカライズパラメーター")]
+        private string[] _localizationParameters;
+
+        [Header("Animation")]
         [SerializeField]
         [Tooltip("タイプライター効果の速度（文字/秒）")]
         private float _typewriterSpeed = 30f;
@@ -28,6 +39,8 @@ namespace TFramework.UI
         #region Private Fields
         private readonly Subject<string> _onTextChangedSubject = new();
         private CancellationTokenSource _animationCts;
+        private ILocalizationService _localization;
+        private IDisposable _languageChangedSubscription;
         #endregion
 
         #region Properties
@@ -45,7 +58,7 @@ namespace TFramework.UI
             set
             {
                 _localizationKey = value;
-                // TODO: ローカライズサービスと連携してテキストを設定
+                UpdateLocalizedText();
             }
         }
 
@@ -53,6 +66,57 @@ namespace TFramework.UI
         /// テキスト変更Observable
         /// </summary>
         public Observable<string> OnTextChanged => _onTextChangedSubject;
+        #endregion
+
+        #region Localization
+        /// <summary>
+        /// VContainerでLocalizationServiceを注入
+        /// </summary>
+        [Inject]
+        public void Construct(ILocalizationService localization)
+        {
+            _localization = localization;
+
+            if (_useLocalization && !string.IsNullOrEmpty(_localizationKey))
+            {
+                UpdateLocalizedText();
+
+                // 言語変更時に自動更新
+                _languageChangedSubscription = _localization.OnLanguageChanged
+                    .Subscribe(_ => UpdateLocalizedText());
+            }
+        }
+
+        /// <summary>
+        /// ローカライズテキストを更新
+        /// </summary>
+        public void UpdateLocalizedText()
+        {
+            if (!_useLocalization || _localization == null || string.IsNullOrEmpty(_localizationKey))
+            {
+                return;
+            }
+
+            if (_localizationParameters != null && _localizationParameters.Length > 0)
+            {
+                SetTextContent(_localization.Get(_localizationKey, _localizationParameters));
+            }
+            else
+            {
+                SetTextContent(_localization.Get(_localizationKey));
+            }
+        }
+
+        /// <summary>
+        /// ローカライズキーとパラメーターを設定
+        /// </summary>
+        public void SetLocalizationKey(string key, params string[] parameters)
+        {
+            _useLocalization = true;
+            _localizationKey = key;
+            _localizationParameters = parameters;
+            UpdateLocalizedText();
+        }
         #endregion
 
         #region Public Methods
@@ -239,6 +303,7 @@ namespace TFramework.UI
         protected override void OnDestroy()
         {
             CancelAnimation();
+            _languageChangedSubscription?.Dispose();
             _onTextChangedSubject.Dispose();
             base.OnDestroy();
         }

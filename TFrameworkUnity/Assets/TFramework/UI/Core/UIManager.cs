@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using TFramework.Core;
 using TFramework.Debug;
 using TFramework.Resource;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
+using VContainer.Unity;
 using Object = UnityEngine.Object;
 
 namespace TFramework.UI
@@ -16,7 +16,7 @@ namespace TFramework.UI
     /// UIサービスの実装
     /// ページ、ダイアログ、トースト、ローディングを管理する
     /// </summary>
-    public sealed class UIManager : IUIService, IInitializable
+    public sealed class UIManager : IUIService, Core.IInitializable
     {
         #region Dependencies
         private readonly IResourceService _resourceService;
@@ -134,8 +134,8 @@ namespace TFramework.UI
                     // RectTransformを全画面に設定
                     SetupRectTransform(page.transform as RectTransform);
 
-                    // VContainerで依存性を注入
-                    _container.Inject(page);
+                    // VContainerで依存性を注入（階層全体）
+                    _container.InjectGameObject(page.gameObject);
                 }
 
                 // ページを初期化・表示
@@ -271,8 +271,8 @@ namespace TFramework.UI
                 // RectTransformを全画面に設定
                 SetupRectTransform(dialog.transform as RectTransform);
 
-                // SetActive(true)の前にVContainerで依存性を注入
-                _container.Inject(dialog);
+                // SetActive(true)の前にVContainerで依存性を注入（階層全体）
+                _container.InjectGameObject(dialog.gameObject);
 
                 var lifecycle = (IUIDialog)dialog;
                 dialog.SetVisible(false);
@@ -322,8 +322,8 @@ namespace TFramework.UI
                 // RectTransformを全画面に設定
                 SetupRectTransform(dialog.transform as RectTransform);
 
-                // SetActive(true)の前にVContainerで依存性を注入
-                _container.Inject(dialog);
+                // SetActive(true)の前にVContainerで依存性を注入（階層全体）
+                _container.InjectGameObject(dialog.gameObject);
 
                 var lifecycle = (IUIDialog)dialog;
                 dialog.SetVisible(false);
