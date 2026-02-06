@@ -322,7 +322,9 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _useLocalization: 0
   _localizationKey: 
+  _localizationParameters: []
   _typewriterSpeed: 30
 --- !u!1 &4975032252012577430
 GameObject:
@@ -461,7 +463,9 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _useLocalization: 0
   _localizationKey: 
+  _localizationParameters: []
   _typewriterSpeed: 30
 --- !u!1 &5234684980814329463
 GameObject:
@@ -844,7 +848,9 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _useLocalization: 0
   _localizationKey: 
+  _localizationParameters: []
   _typewriterSpeed: 30
 --- !u!1 &8119507921436284487
 GameObject:
@@ -983,7 +989,9 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _useLocalization: 0
   _localizationKey: 
+  _localizationParameters: []
   _typewriterSpeed: 30
 --- !u!1 &8417689918633694495
 GameObject:
@@ -1062,9 +1070,9 @@ MonoBehaviour:
   _closeOnBackgroundClick: 1
   _titleText: {fileID: 2869271381370328741}
   _messageText: {fileID: 7804823928507904665}
-  _confirmButton: {fileID: 0}
+  _confirmButton: {fileID: 4886542370582454120}
   _confirmButtonText: {fileID: 7958160241608505993}
-  _cancelButton: {fileID: 0}
+  _cancelButton: {fileID: 8435830528941307110}
   _cancelButtonText: {fileID: 2330140408663177089}
 --- !u!1 &8962897874540366742
 GameObject:
