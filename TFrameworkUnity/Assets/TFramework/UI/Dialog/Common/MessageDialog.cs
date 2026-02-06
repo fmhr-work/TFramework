@@ -1,7 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,16 +23,16 @@ namespace TFramework.UI
         #region Serialized Fields
         [Header("UI References")]
         [SerializeField]
-        private TextMeshProUGUI _titleText;
+        private TFTextUGUI _titleText;
 
         [SerializeField]
-        private TextMeshProUGUI _messageText;
+        private TFTextUGUI _messageText;
 
         [SerializeField]
         private Button _okButton;
 
         [SerializeField]
-        private TextMeshProUGUI _okButtonText;
+        private TFTextUGUI _okButtonText;
         #endregion
 
         #region Private Fields
@@ -48,13 +47,13 @@ namespace TFramework.UI
             if (param is Param dialogParam)
             {
                 if (_titleText != null)
-                    _titleText.text = dialogParam.Title ?? string.Empty;
+                    _titleText.SetTextContent(dialogParam.Title ?? string.Empty);
 
                 if (_messageText != null)
-                    _messageText.text = dialogParam.Message ?? string.Empty;
+                    _messageText.SetTextContent(dialogParam.Message ?? string.Empty);
 
                 if (_okButtonText != null)
-                    _okButtonText.text = dialogParam.ButtonText;
+                    _okButtonText.SetTextContent(dialogParam.ButtonText);
             }
 
             // ボタンイベント登録

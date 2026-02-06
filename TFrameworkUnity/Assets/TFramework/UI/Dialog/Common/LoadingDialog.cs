@@ -1,6 +1,5 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 
 namespace TFramework.UI
@@ -13,7 +12,7 @@ namespace TFramework.UI
         #region Serialized Fields
         [Header("UI References")]
         [SerializeField]
-        private TextMeshProUGUI _messageText;
+        private TFTextUGUI _messageText;
 
         [SerializeField]
         private RectTransform _loadingIcon;
@@ -31,7 +30,7 @@ namespace TFramework.UI
         {
             if (param is string message && _messageText != null)
             {
-                _messageText.text = message;
+                _messageText.SetTextContent(message);
             }
 
             return UniTask.CompletedTask;
@@ -73,7 +72,7 @@ namespace TFramework.UI
         {
             if (_messageText != null)
             {
-                _messageText.text = message;
+                _messageText.SetTextContent(message);
             }
         }
         #endregion

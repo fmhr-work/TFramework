@@ -1,7 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,22 +24,22 @@ namespace TFramework.UI
         #region Serialized Fields
         [Header("UI References")]
         [SerializeField]
-        private TextMeshProUGUI _titleText;
+        private TFTextUGUI _titleText;
 
         [SerializeField]
-        private TextMeshProUGUI _messageText;
+        private TFTextUGUI _messageText;
 
         [SerializeField]
         private Button _confirmButton;
 
         [SerializeField]
-        private TextMeshProUGUI _confirmButtonText;
+        private TFTextUGUI _confirmButtonText;
 
         [SerializeField]
         private Button _cancelButton;
 
         [SerializeField]
-        private TextMeshProUGUI _cancelButtonText;
+        private TFTextUGUI _cancelButtonText;
         #endregion
 
         #region Private Fields
@@ -55,16 +54,16 @@ namespace TFramework.UI
             if (param is Param dialogParam)
             {
                 if (_titleText != null)
-                    _titleText.text = dialogParam.Title ?? string.Empty;
+                    _titleText.SetTextContent(dialogParam.Title ?? string.Empty);
 
                 if (_messageText != null)
-                    _messageText.text = dialogParam.Message ?? string.Empty;
+                    _messageText.SetTextContent(dialogParam.Message ?? string.Empty);
 
                 if (_confirmButtonText != null)
-                    _confirmButtonText.text = dialogParam.ConfirmText;
+                    _confirmButtonText.SetTextContent(dialogParam.ConfirmText);
 
                 if (_cancelButtonText != null)
-                    _cancelButtonText.text = dialogParam.CancelText;
+                    _cancelButtonText.SetTextContent(dialogParam.CancelText);
             }
 
             // ボタンイベント登録（Unity event methodsではなくR3使用）

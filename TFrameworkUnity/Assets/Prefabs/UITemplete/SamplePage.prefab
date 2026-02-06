@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 8875866387690975952}
   - component: {fileID: 4529395612462199737}
   - component: {fileID: 4680091054089194552}
-  - component: {fileID: 1795370297211195162}
   - component: {fileID: 5017072890214747948}
   m_Layer: 5
   m_Name: BackButton
@@ -153,7 +152,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1795370297211195162
+--- !u!114 &5017072890214747948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,9 +161,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3108518411449946524}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -197,19 +196,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5017072890214747948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3108518411449946524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
-  _button: {fileID: 1795370297211195162}
   _longPressDuration: 0.5
 --- !u!1 &4437301865867437199
 GameObject:
@@ -221,9 +207,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5758740027928843827}
   - component: {fileID: 5204897095588779840}
-  - component: {fileID: 9027925963870541633}
+  - component: {fileID: 8267182270928032611}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text (TFT)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,7 +242,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4437301865867437199}
   m_CullTransparentMesh: 1
---- !u!114 &9027925963870541633
+--- !u!114 &8267182270928032611
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,9 +251,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4437301865867437199}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -285,8 +271,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -304,7 +290,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 53.7
-  m_fontSizeBase: 24
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
@@ -348,6 +334,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &5172062732533120981
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6079405380161542660}
   - component: {fileID: 4848815512206027055}
-  - component: {fileID: 945561446624334909}
+  - component: {fileID: 3808515035289601723}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -393,7 +381,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5172062732533120981}
   m_CullTransparentMesh: 1
---- !u!114 &945561446624334909
+--- !u!114 &3808515035289601723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -402,9 +390,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5172062732533120981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -485,6 +473,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &7137049718375815862
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,5 +551,5 @@ MonoBehaviour:
   _canvasGroup: {fileID: 9134858936138524607}
   _pageAddress: SamplePage
   _cacheOnClose: 1
-  _titleText: {fileID: 945561446624334909}
+  _titleText: {fileID: 3808515035289601723}
   _backButton: {fileID: 5017072890214747948}

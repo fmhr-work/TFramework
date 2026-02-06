@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8093905566085176936}
   - component: {fileID: 3407771032439496137}
   - component: {fileID: 176896552281148226}
-  - component: {fileID: 6425279474985726234}
   - component: {fileID: 8090587963091906611}
   m_Layer: 5
   m_Name: Background
@@ -77,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6425279474985726234
+--- !u!114 &8090587963091906611
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,9 +85,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 72579393389911230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -121,19 +120,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8090587963091906611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72579393389911230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
-  _button: {fileID: 6425279474985726234}
   _longPressDuration: 0.5
 --- !u!1 &158005748988480485
 GameObject:
@@ -209,9 +195,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2978355119189682683}
   - component: {fileID: 2189588513986813532}
-  - component: {fileID: 887663533076461191}
+  - component: {fileID: 7958160241608505993}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text (TFT)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,7 +230,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3555629142304867284}
   m_CullTransparentMesh: 1
---- !u!114 &887663533076461191
+--- !u!114 &7958160241608505993
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,9 +239,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3555629142304867284}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -273,8 +259,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -336,6 +322,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &4975032252012577430
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6018789064598669321}
   - component: {fileID: 9122641138122066559}
-  - component: {fileID: 7533215719531019856}
+  - component: {fileID: 2869271381370328741}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -381,7 +369,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4975032252012577430}
   m_CullTransparentMesh: 1
---- !u!114 &7533215719531019856
+--- !u!114 &2869271381370328741
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -390,9 +378,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4975032252012577430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -473,6 +461,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &5234684980814329463
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +474,6 @@ GameObject:
   - component: {fileID: 7510215844549494027}
   - component: {fileID: 8221125443459968819}
   - component: {fileID: 3092819350854399195}
-  - component: {fileID: 7065611911713833244}
   - component: {fileID: 4886542370582454120}
   m_Layer: 5
   m_Name: ConfirmButton
@@ -551,7 +540,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7065611911713833244
+--- !u!114 &4886542370582454120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -560,9 +549,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5234684980814329463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -595,19 +584,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4886542370582454120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5234684980814329463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
-  _button: {fileID: 7065611911713833244}
   _longPressDuration: 0.5
 --- !u!1 &7425286946540435765
 GameObject:
@@ -620,7 +596,6 @@ GameObject:
   - component: {fileID: 8927880942578091039}
   - component: {fileID: 7760387861862599030}
   - component: {fileID: 3142936714686801178}
-  - component: {fileID: 5100082757827660520}
   - component: {fileID: 8435830528941307110}
   m_Layer: 5
   m_Name: CancelButton
@@ -687,7 +662,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5100082757827660520
+--- !u!114 &8435830528941307110
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -696,9 +671,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7425286946540435765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -731,19 +706,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8435830528941307110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7425286946540435765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 011a2af44c6e3304392b441eba84e13b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.UIButton
-  _button: {fileID: 5100082757827660520}
   _longPressDuration: 0.5
 --- !u!1 &7832625724305313283
 GameObject:
@@ -755,7 +717,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5884336270495695538}
   - component: {fileID: 2417364565355501671}
-  - component: {fileID: 2987811311441625920}
+  - component: {fileID: 7804823928507904665}
   m_Layer: 5
   m_Name: Message
   m_TagString: Untagged
@@ -790,7 +752,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7832625724305313283}
   m_CullTransparentMesh: 1
---- !u!114 &2987811311441625920
+--- !u!114 &7804823928507904665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -799,9 +761,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7832625724305313283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -882,6 +844,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &8119507921436284487
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,9 +856,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4673999137253948191}
   - component: {fileID: 1326096035030474100}
-  - component: {fileID: 5293628141157874829}
+  - component: {fileID: 2330140408663177089}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text (TFT)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -927,7 +891,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8119507921436284487}
   m_CullTransparentMesh: 1
---- !u!114 &5293628141157874829
+--- !u!114 &2330140408663177089
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -936,9 +900,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8119507921436284487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: cbdadf6957f12b44f9b15593c81b12fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: TFramework.UI::TFramework.UI.TFTextUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -956,8 +920,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1019,6 +983,8 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+  _localizationKey: 
+  _typewriterSpeed: 30
 --- !u!1 &8417689918633694495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,14 +1058,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TFramework.UI::TFramework.UI.ConfirmDialog
   _canvasGroup: {fileID: 4418154725837278079}
-  _backgroundButton: {fileID: 6425279474985726234}
+  _backgroundButton: {fileID: 0}
   _closeOnBackgroundClick: 1
-  _titleText: {fileID: 7533215719531019856}
-  _messageText: {fileID: 2987811311441625920}
-  _confirmButton: {fileID: 7065611911713833244}
-  _confirmButtonText: {fileID: 5293628141157874829}
-  _cancelButton: {fileID: 5100082757827660520}
-  _cancelButtonText: {fileID: 887663533076461191}
+  _titleText: {fileID: 2869271381370328741}
+  _messageText: {fileID: 7804823928507904665}
+  _confirmButton: {fileID: 0}
+  _confirmButtonText: {fileID: 7958160241608505993}
+  _cancelButton: {fileID: 0}
+  _cancelButtonText: {fileID: 2330140408663177089}
 --- !u!1 &8962897874540366742
 GameObject:
   m_ObjectHideFlags: 0
