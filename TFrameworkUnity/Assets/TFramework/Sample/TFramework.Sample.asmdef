@@ -7,9 +7,11 @@
         "TFramework.Pool",
         "TFramework.Resource",
         "TFramework.Installer",
+        "TFramework.UI",
         "UniTask",
         "R3.Unity",
-        "VContainer"
+        "VContainer",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -14,7 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: 2635a1ec5a437dd48b67f14ff6c63f34
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 7857c3e172b4aff44932b20c284799a1
+    m_Address: ConfirmDialog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e53156fa5a5f9a47a7d13bae28489a4
+    m_Address: UIRoot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac905bdcebd7a624a844e305a1a58534
+    m_Address: SamplePage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7b3f42e693ee50c40b5e9728c333f8dd, type: 2}
   m_SchemaSet:
