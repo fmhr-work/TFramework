@@ -25,6 +25,9 @@ namespace TFramework.Sample
         [SerializeField] 
         private UIButton _backButton;
 
+        [SerializeField]
+        private UIButton _timeSampleButton;
+
         [Header("Language Switcher")]
         [SerializeField]
         private UIButton _japaneseButton;
@@ -53,6 +56,7 @@ namespace TFramework.Sample
         {
             // ボタン初期化
             _backButton?.Initialize();
+            _timeSampleButton?.Initialize();
             _japaneseButton?.Initialize();
             _englishButton?.Initialize();
             _chineseButton?.Initialize();
@@ -77,6 +81,11 @@ namespace TFramework.Sample
             // 戻るボタン
             _backButton?.OnClickAsObservable()
                 .Subscribe(_ => OnBackClicked())
+                .AddTo(PageToken);
+
+            // Time Sampleへ遷移
+            _timeSampleButton?.OnClickAsObservable()
+                .Subscribe(_ => OnTimeSampleClicked())
                 .AddTo(PageToken);
             
             // 言語切り替えボタン
@@ -108,6 +117,11 @@ namespace TFramework.Sample
         {
             TLogger.Info($"[SamplePage] Changing language to: {newLanguage}");
             _localization.CurrentLanguage = newLanguage;
+        }
+
+        private async void OnTimeSampleClicked()
+        {
+            await _uiService.ShowPageAsync<TimeSamplePage>();
         }
 
         private async void OnBackClicked()

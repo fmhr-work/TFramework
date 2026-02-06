@@ -8,6 +8,7 @@
         "TFramework.Resource",
         "TFramework.Installer",
         "TFramework.Localization",
+        "TFramework.Time",
         "TFramework.UI",
         "UniTask",
         "R3.Unity",
