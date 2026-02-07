@@ -1,18 +1,17 @@
 {
-    "name": "TFramework.Installer",
-    "rootNamespace": "TFramework.Installer",
+    "name": "TFramework.Scene",
+    "rootNamespace": "TFramework.Scene",
     "references": [
         "TFramework.Core",
         "TFramework.Debug",
-        "TFramework.Pool",
-        "TFramework.Resource",
-        "TFramework.Scene",
         "TFramework.UI",
-        "TFramework.Localization",
-        "TFramework.Time",
+        "TFramework.Resource",
         "UniTask",
         "R3.Unity",
-        "VContainer"
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "UniTask.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

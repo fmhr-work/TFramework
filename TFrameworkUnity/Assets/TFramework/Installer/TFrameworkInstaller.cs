@@ -3,6 +3,7 @@ using TFramework.Debug;
 using TFramework.Localization;
 using TFramework.Pool;
 using TFramework.Resource;
+using TFramework.Scene;
 using TFramework.Time;
 using TFramework.UI;
 using VContainer;
@@ -63,6 +64,14 @@ namespace TFramework.Installer
             // Time
             builder.Register<TimeManager>(Lifetime.Singleton)
                 .As<ITimeService>()
+                .As<IInitializable>();
+
+            // Scene Settings
+            builder.RegisterInstance(SceneSettings.Instance);
+
+            // Scene
+            builder.Register<SceneManager>(Lifetime.Singleton)
+                .As<ISceneService>()
                 .As<IInitializable>();
 
             // 登録完了ログ
