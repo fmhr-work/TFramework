@@ -74,6 +74,10 @@ namespace TFramework.Installer
                 .As<ISceneService>()
                 .As<IInitializable>();
 
+            // Camera
+            builder.Register<CameraService>(Lifetime.Singleton)
+                .As<IInitializable>();
+
             // 登録完了ログ
             TLogger.Info("TFramework services installed", "Installer");
         }
