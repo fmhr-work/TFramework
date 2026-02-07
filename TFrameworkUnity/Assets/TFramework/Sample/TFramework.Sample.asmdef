@@ -6,6 +6,7 @@
         "TFramework.Debug",
         "TFramework.Pool",
         "TFramework.Resource",
+        "TFramework.Scene",
         "TFramework.Installer",
         "TFramework.Localization",
         "TFramework.Time",

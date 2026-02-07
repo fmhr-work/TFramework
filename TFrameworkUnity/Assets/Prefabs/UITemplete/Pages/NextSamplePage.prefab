@@ -1948,7 +1948,7 @@ GameObject:
   - component: {fileID: 9134858936138524607}
   - component: {fileID: 4466509015690283662}
   m_Layer: 5
-  m_Name: SamplePage
+  m_Name: NextSamplePage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

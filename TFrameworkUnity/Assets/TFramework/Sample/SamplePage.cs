@@ -5,6 +5,7 @@ using TFramework.UI;
 using TFramework.Debug;
 using TFramework.Localization;
 using R3;
+using TFramework.Scene;
 using VContainer;
 
 namespace TFramework.Sample
@@ -27,6 +28,9 @@ namespace TFramework.Sample
 
         [SerializeField]
         private UIButton _timeSampleButton;
+        
+        [SerializeField]
+        private UIButton _nextSceneButton;
 
         [Header("Language Switcher")]
         [SerializeField]
@@ -42,12 +46,14 @@ namespace TFramework.Sample
         #region Dependencies
         private IUIService _uiService;
         private ILocalizationService _localization;
+        private ISceneService _sceneService;
 
         [Inject]
-        public void Construct(IUIService uiService, ILocalizationService localization)
+        public void Construct(IUIService uiService, ILocalizationService localization, ISceneService sceneService)
         {
             _uiService = uiService;
             _localization = localization;
+            _sceneService = sceneService;
         }
         #endregion
 
@@ -57,6 +63,7 @@ namespace TFramework.Sample
             // ボタン初期化
             _backButton?.Initialize();
             _timeSampleButton?.Initialize();
+            _nextSceneButton?.Initialize();
             _japaneseButton?.Initialize();
             _englishButton?.Initialize();
             _chineseButton?.Initialize();
@@ -80,12 +87,15 @@ namespace TFramework.Sample
             
             // 戻るボタン
             _backButton?.OnClickAsObservable()
-                .Subscribe(_ => OnBackClicked())
+                .Subscribe(_ => OnBackClicked().Forget())
                 .AddTo(PageToken);
 
             // Time Sampleへ遷移
             _timeSampleButton?.OnClickAsObservable()
-                .Subscribe(_ => OnTimeSampleClicked())
+                .Subscribe(_ => OnTimeSampleClicked().Forget())
+                .AddTo(PageToken);
+            _nextSceneButton?.OnClickAsObservable()
+                .Subscribe(_ => OnNextSceneClicked().Forget())
                 .AddTo(PageToken);
             
             // 言語切り替えボタン
@@ -119,12 +129,18 @@ namespace TFramework.Sample
             _localization.CurrentLanguage = newLanguage;
         }
 
-        private async void OnTimeSampleClicked()
+        private async UniTask OnTimeSampleClicked()
         {
             await _uiService.ShowPageAsync<TimeSamplePage>();
         }
 
-        private async void OnBackClicked()
+        private async UniTask OnNextSceneClicked()
+        {
+            var data = new NextSampleSceneBridgeData("Hello from SamplePage!", 123);
+            await _sceneService.LoadSceneAsync("NextSampleScene", data, ct: this.GetCancellationTokenOnDestroy());
+        }
+
+        private async UniTask OnBackClicked()
         {
             // ConfirmDialogを表示（ローカライズキーを使用）
             var result = await _uiService.ShowDialogAsync<ConfirmDialog, bool>(
@@ -144,6 +160,26 @@ namespace TFramework.Sample
             else
             {
                 TLogger.Info("User cancelled");
+            }
+        }
+        
+        /// <summary>
+        /// シーンから渡されたBridgeDataを受け取って表示する（テスト用）
+        /// </summary>
+        public void SetupFromSceneBridgeData(NextSampleSceneBridgeData data)
+        {
+            if (data == null)
+            {
+                TLogger.Warning("[SamplePage] Received null bridge data");
+                return;
+            }
+            
+            TLogger.Info($"[SamplePage] Received bridge data - Message: {data.Message}, SourceId: {data.SourceId}");
+            
+            // タイトルテキストに受け取ったデータを表示
+            if (_titleText != null)
+            {
+                _titleText.SetTextContent($"Scene Data: {data.Message} (ID: {data.SourceId})");
             }
         }
         #endregion
