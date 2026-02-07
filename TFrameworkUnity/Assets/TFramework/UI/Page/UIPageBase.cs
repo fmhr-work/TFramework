@@ -94,6 +94,11 @@ namespace TFramework.UI
 
         void IUIPageLifecycle.OnOpened()
         {
+            // ページが再表示される際に新しいCancellationTokenSourceを作成
+            _pageCts?.Cancel();
+            _pageCts?.Dispose();
+            _pageCts = new CancellationTokenSource();
+            
             OnOpened();
             _onOpenedSubject.OnNext(Unit.Default);
         }
@@ -105,6 +110,10 @@ namespace TFramework.UI
 
         void IUIPageLifecycle.OnClosed()
         {
+            // ページが閉じられた時に全ての購読をキャンセル
+            // PageTokenを使った購読は自動的にクリーンアップされる
+            _pageCts?.Cancel();
+            
             OnClosed();
             _onClosedSubject.OnNext(Unit.Default);
         }
@@ -113,6 +122,7 @@ namespace TFramework.UI
         {
             _pageCts?.Cancel();
             _pageCts?.Dispose();
+            _pageCts = null;
             _onOpenedSubject.Dispose();
             _onClosedSubject.Dispose();
             OnTerminate();

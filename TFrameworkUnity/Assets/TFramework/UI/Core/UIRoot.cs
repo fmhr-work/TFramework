@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TFramework.Debug;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace TFramework.UI
@@ -15,39 +16,39 @@ namespace TFramework.UI
     public sealed class UIRoot : MonoBehaviour
     {
         #region Serialized Fields
-        [Header("Layer Containers")]
-        [SerializeField]
+
+        [Header("Layer Containers")] [SerializeField]
         private RectTransform _backgroundContainer;
 
-        [SerializeField]
-        private RectTransform _pageContainer;
+        [SerializeField] private RectTransform _pageContainer;
 
-        [SerializeField]
-        private RectTransform _popupContainer;
+        [SerializeField] private RectTransform _popupContainer;
 
-        [SerializeField]
-        private RectTransform _dialogContainer;
+        [SerializeField] private RectTransform _dialogContainer;
 
-        [SerializeField]
-        private RectTransform _toastContainer;
+        [SerializeField] private RectTransform _toastContainer;
 
-        [SerializeField]
-        private RectTransform _loadingContainer;
+        [SerializeField] private RectTransform _loadingContainer;
 
-        [SerializeField]
-        private RectTransform _systemContainer;
+        [SerializeField] private RectTransform _systemContainer;
+
         #endregion
 
         #region Private Fields
+
         private readonly Dictionary<UILayer, RectTransform> _layerContainers = new();
+
         #endregion
 
         #region Properties
+
         public Canvas Canvas { get; private set; }
         public CanvasScaler CanvasScaler { get; private set; }
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// UIRootを初期化する（UIManagerから呼び出される）
         /// </summary>
@@ -81,9 +82,11 @@ namespace TFramework.UI
             var container = GetLayerContainer(layer);
             element.SetParent(container, false);
         }
+
         #endregion
 
         #region Private Methods
+
         private void InitializeLayerContainers()
         {
             _layerContainers[UILayer.Background] = _backgroundContainer;
@@ -94,6 +97,7 @@ namespace TFramework.UI
             _layerContainers[UILayer.Loading] = _loadingContainer;
             _layerContainers[UILayer.System] = _systemContainer;
         }
-        #endregion
+
+    #endregion
     }
 }
