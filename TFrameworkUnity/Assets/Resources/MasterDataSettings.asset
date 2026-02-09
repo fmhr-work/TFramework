@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b6786b59b3ce44590c411fcd0deae4, type: 3}
+  m_Name: MasterDataSettings
+  m_EditorClassIdentifier: TFramework.MasterData::TFramework.MasterData.MasterDataSettings
+  _externalDataPath: Assets/Sample/MasterData
+  _codeOutputPath: Scripts/Generated/MasterData
+  _assetOutputPath: Data/MasterData
+  _autoLoadOnStartup: 1
+  _containers:
+  - {fileID: 11400000, guid: c252fbf2d1fba5e41b964b95f6706ef9, type: 2}
+  - {fileID: 11400000, guid: fccbbaf02dc09f640b4a718b69216bdc, type: 2}
+  - {fileID: 11400000, guid: be7acfc594a4a9c46a60633d7716401d, type: 2}
+  _enableServerSync: 0
+  _serverUrl: https://example.com/api/masterdata
