@@ -1,6 +1,7 @@
 using TFramework.Core;
 using TFramework.Debug;
 using TFramework.Localization;
+using TFramework.MasterData;
 using TFramework.Pool;
 using TFramework.Resource;
 using TFramework.Scene;
@@ -72,6 +73,14 @@ namespace TFramework.Installer
             // Scene
             builder.Register<SceneManager>(Lifetime.Singleton)
                 .As<ISceneService>()
+                .As<IInitializable>();
+
+            // MasterData Settings
+            builder.RegisterInstance(MasterDataSettings.Instance);
+
+            // MasterData
+            builder.Register<MasterDataManager>(Lifetime.Singleton)
+                .As<IMasterDataService>()
                 .As<IInitializable>();
 
             // Camera

@@ -4,6 +4,7 @@
     "references": [
         "TFramework.Core",
         "TFramework.Debug",
+        "TFramework.MasterData",
         "TFramework.Pool",
         "TFramework.Resource",
         "TFramework.Scene",
