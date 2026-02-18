@@ -1,0 +1,18 @@
+{
+    "name": "TFramework.SaveData",
+    "rootNamespace": "TFramework.SaveData",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

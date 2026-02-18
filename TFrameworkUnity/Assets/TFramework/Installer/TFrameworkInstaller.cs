@@ -5,6 +5,7 @@ using TFramework.MasterData;
 using TFramework.Pool;
 using TFramework.Resource;
 using TFramework.Scene;
+using TFramework.SaveData;
 using TFramework.Time;
 using TFramework.UI;
 using VContainer;
@@ -86,6 +87,15 @@ namespace TFramework.Installer
             // Camera
             builder.Register<CameraService>(Lifetime.Singleton)
                 .As<IInitializable>();
+
+            // SaveData Settings
+            builder.RegisterInstance(SaveDataSettings.Instance);
+
+            // SaveData
+            builder.Register<SaveDataManager>(Lifetime.Singleton)
+                .As<ISaveDataService>()
+                .As<IInitializable>()
+                .As<System.IDisposable>();
 
             // 登録完了ログ
             TLogger.Info("TFramework services installed", "Installer");

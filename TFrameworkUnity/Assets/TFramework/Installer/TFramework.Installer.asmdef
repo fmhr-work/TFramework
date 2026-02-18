@@ -7,6 +7,7 @@
         "TFramework.MasterData",
         "TFramework.Pool",
         "TFramework.Resource",
+        "TFramework.SaveData",
         "TFramework.Scene",
         "TFramework.UI",
         "TFramework.Localization",
