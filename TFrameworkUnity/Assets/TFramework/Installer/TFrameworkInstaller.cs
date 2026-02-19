@@ -8,6 +8,7 @@ using TFramework.Scene;
 using TFramework.SaveData;
 using TFramework.Time;
 using TFramework.UI;
+using TFramework.Audio;
 using VContainer;
 
 namespace TFramework.Installer
@@ -94,6 +95,15 @@ namespace TFramework.Installer
             // SaveData
             builder.Register<SaveDataManager>(Lifetime.Singleton)
                 .As<ISaveDataService>()
+                .As<IInitializable>()
+                .As<System.IDisposable>();
+
+            // Audio Settings
+            builder.RegisterInstance(AudioModuleSettings.Instance);
+
+            // Audio
+            builder.Register<AudioManager>(Lifetime.Singleton)
+                .As<IAudioService>()
                 .As<IInitializable>()
                 .As<System.IDisposable>();
 
