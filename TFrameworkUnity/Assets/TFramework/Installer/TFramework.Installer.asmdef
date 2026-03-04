@@ -13,6 +13,7 @@
         "TFramework.UI",
         "TFramework.Localization",
         "TFramework.Time",
+        "TFramework.Network",
         "UniTask",
         "R3.Unity",
         "VContainer"

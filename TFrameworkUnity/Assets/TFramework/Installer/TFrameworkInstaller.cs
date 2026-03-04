@@ -9,6 +9,7 @@ using TFramework.SaveData;
 using TFramework.Time;
 using TFramework.UI;
 using TFramework.Audio;
+using TFramework.Network;
 using VContainer;
 
 namespace TFramework.Installer
@@ -104,6 +105,21 @@ namespace TFramework.Installer
             // Audio
             builder.Register<AudioManager>(Lifetime.Singleton)
                 .As<IAudioService>()
+                .As<IInitializable>()
+                .As<System.IDisposable>();
+
+            // Network Settings
+            builder.RegisterInstance(NetworkSettings.Instance);
+
+            // Network Serializer (Json)
+            builder.Register<JsonNetworkSerializer>(Lifetime.Singleton).As<INetworkSerializer>();
+
+            // Network Client (UnityHttpClient)
+            builder.Register<UnityHttpClient>(Lifetime.Singleton).As<IHttpClient>();
+
+            // Network Manager
+            builder.Register<NetworkManager>(Lifetime.Singleton)
+                .As<INetworkService>()
                 .As<IInitializable>()
                 .As<System.IDisposable>();
 
