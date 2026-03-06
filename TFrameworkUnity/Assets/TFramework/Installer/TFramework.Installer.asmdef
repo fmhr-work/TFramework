@@ -1,0 +1,30 @@
+{
+    "name": "TFramework.Installer",
+    "rootNamespace": "TFramework.Installer",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.MasterData",
+        "TFramework.Pool",
+        "TFramework.Resource",
+        "TFramework.SaveData",
+        "TFramework.Audio",
+        "TFramework.Scene",
+        "TFramework.UI",
+        "TFramework.Localization",
+        "TFramework.Time",
+        "TFramework.Network",
+        "UniTask",
+        "R3.Unity",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,20 @@
+{
+    "name": "TFramework.Pool",
+    "rootNamespace": "TFramework.Pool",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "UniTask",
+        "R3.Unity",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

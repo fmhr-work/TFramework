@@ -1,0 +1,19 @@
+{
+    "name": "TFramework.Time",
+    "rootNamespace": "TFramework.Time",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "UniTask",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

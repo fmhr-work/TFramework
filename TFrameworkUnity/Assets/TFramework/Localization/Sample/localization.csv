@@ -1,0 +1,16 @@
+Key,ja,en,zh-CN,zh-TW,ko
+ui.title.main,メインメニュー,Main Menu,主菜单,主選單,메인 메뉴
+ui.title.settings,設定,Settings,设置,設定,설정
+ui.button.start,開始,Start,开始,開始,시작
+ui.button.quit,終了,Quit,退出,結束,종료
+ui.button.back,戻る,Back,返回,返回,뒤로
+ui.button.confirm,確認,Confirm,确认,確認,확인
+ui.button.cancel,キャンセル,Cancel,取消,取消,취소
+ui.message.welcome,{0}さん、ようこそ！,Welcome {0}!,欢迎 {0}！,歡迎 {0}！,{0}님 환영합니다!
+ui.message.loading,ロード中...,Loading...,加载中...,載入中...,로딩 중...
+ui.message.saving,保存中...,Saving...,保存中...,儲存中...,저장 중...
+ui.message.complete,完了！,Complete!,完成！,完成！,완료!
+ui.label.level,レベル,Level,等级,等級,레벨
+ui.label.hp,HP,HP,HP,HP,HP
+ui.label.mp,MP,MP,MP,MP,MP
+ui.label.score,スコア,Score,分数,分數,점수

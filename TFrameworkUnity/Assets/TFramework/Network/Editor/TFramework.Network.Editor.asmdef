@@ -1,0 +1,20 @@
+{
+    "name": "TFramework.Network.Editor",
+    "rootNamespace": "TFramework.Network.Editor",
+    "references": [
+        "TFramework.Network",
+        "TFramework.Core",
+        "TFramework.Debug"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

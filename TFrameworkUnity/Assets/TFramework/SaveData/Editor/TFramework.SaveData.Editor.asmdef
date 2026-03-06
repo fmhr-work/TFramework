@@ -1,0 +1,19 @@
+{
+    "name": "TFramework.SaveData.Editor",
+    "rootNamespace": "TFramework.SaveData.Editor",
+    "references": [
+        "TFramework.SaveData",
+        "TFramework.Debug"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

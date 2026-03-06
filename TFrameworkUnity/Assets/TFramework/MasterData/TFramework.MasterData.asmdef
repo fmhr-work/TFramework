@@ -1,0 +1,19 @@
+{
+    "name": "TFramework.MasterData",
+    "rootNamespace": "TFramework.MasterData",
+    "references": [
+        "TFramework.Core",
+        "UniTask",
+        "VContainer",
+        "TFramework.Debug"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

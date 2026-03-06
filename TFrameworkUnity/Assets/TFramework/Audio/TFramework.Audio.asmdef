@@ -1,0 +1,24 @@
+{
+    "name": "TFramework.Audio",
+    "rootNamespace": "TFramework.Audio",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.Pool",
+        "TFramework.Resource",
+        "TFramework.SaveData",
+        "UniTask",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

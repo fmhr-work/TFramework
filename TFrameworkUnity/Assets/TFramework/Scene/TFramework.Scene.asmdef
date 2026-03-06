@@ -1,0 +1,25 @@
+{
+    "name": "TFramework.Scene",
+    "rootNamespace": "TFramework.Scene",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "TFramework.UI",
+        "TFramework.Resource",
+        "UniTask",
+        "R3.Unity",
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "UniTask.Addressables"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

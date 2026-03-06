@@ -1,0 +1,23 @@
+{
+    "name": "TFramework.Localization",
+    "rootNamespace": "TFramework.Localization",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:6546d7765b4165b40850b3667f981c26",
+        "GUID:1b75ee0f67250de48bb9fc33ec74187f",
+        "GUID:60aa57f038b30914a81cc7bea92bfee2",
+        "GUID:09369bdbb9760ef4aabd44becafea06a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

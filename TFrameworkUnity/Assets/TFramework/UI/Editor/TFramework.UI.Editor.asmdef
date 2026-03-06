@@ -1,0 +1,20 @@
+{
+    "name": "TFramework.UI.Editor",
+    "rootNamespace": "TFramework.UI.Editor",
+    "references": [
+        "TFramework.UI",
+        "Unity.TextMeshPro",
+        "Unity.TextMeshPro.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
