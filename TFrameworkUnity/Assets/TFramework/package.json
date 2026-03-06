@@ -12,6 +12,7 @@
         "com.cysharp.unitask": "2.5.4",
         "jp.hadashikick.vcontainer": "1.17.0",
         "com.unity.addressables": "2.8.1",
-        "com.unity.ugui": "2.0.0"
+        "com.unity.ugui": "2.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
     }
 }
