@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "displayName": "TFramework",
     "description": "A Fumihiro's framework for Unity.",
-    "unity": "6000",
+    "unity": "2022.3",
     "author": {
         "name": "fmhr"
     },
