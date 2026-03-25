@@ -1,0 +1,19 @@
+{
+    "name": "TFramework.SDK",
+    "rootNamespace": "TFramework.SDK",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "R3",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
