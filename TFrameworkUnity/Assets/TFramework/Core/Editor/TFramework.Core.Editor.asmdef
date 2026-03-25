@@ -1,0 +1,28 @@
+{
+  "name": "TFramework.Core.Editor",
+  "rootNamespace": "TFramework.Core.Editor",
+  "references": [
+    "TFramework.Core",
+    "TFramework.UI",
+    "TFramework.Audio",
+    "TFramework.Network",
+    "TFramework.SaveData",
+    "TFramework.Localization",
+    "TFramework.Time",
+    "TFramework.Scene",
+    "TFramework.MasterData",
+    "TFramework.Debug"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
+
