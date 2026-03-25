@@ -10,15 +10,15 @@ namespace TFramework.MasterData
     }
 
     /// <summary>
-    /// 主キーを持つMasterDataのジェネリックインターフェース
+    /// メインキーを持つMasterDataのジェネリックインターフェース
     /// </summary>
-    /// <typeparam name="TKey">主キーの型</typeparam>
+    /// <typeparam name="TKey">メインキーの型</typeparam>
     public interface IMasterDataObject<out TKey> : IMasterDataObject
     {
         /// <summary>
-        /// 主キーを取得する
+        /// メインキーを取得する
         /// </summary>
-        /// <returns>主キーの値</returns>
+        /// <returns>メインキーの値</returns>
         TKey GetKey();
     }
 }

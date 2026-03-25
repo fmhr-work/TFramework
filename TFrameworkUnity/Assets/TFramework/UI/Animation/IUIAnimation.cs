@@ -1,7 +1,3 @@
-// ============================================================================
-// TFramework - UI Animation Interface
-// ============================================================================
-
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
