@@ -1,7 +1,3 @@
-// ============================================================================
-// TFramework - UI Page Lifecycle Interface
-// ============================================================================
-
 using System.Threading;
 using Cysharp.Threading.Tasks;
 

@@ -1,7 +1,3 @@
-// ============================================================================
-// TFramework - UI Transition Presets
-// ============================================================================
-
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

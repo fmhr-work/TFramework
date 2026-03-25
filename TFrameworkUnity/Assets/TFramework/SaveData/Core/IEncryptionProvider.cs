@@ -1,7 +1,6 @@
 namespace TFramework.SaveData
 {
     /// <summary>
-    /// Encryption Provider Interface
     /// データの暗号化・復号化を行う
     /// </summary>
     public interface IEncryptionProvider

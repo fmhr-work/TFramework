@@ -26,11 +26,11 @@ namespace TFramework.MasterData
         IReadOnlyList<T> GetAll<T>() where T : class, IMasterDataObject;
 
         /// <summary>
-        /// 指定した主キーを持つMasterDataを取得する
+        /// 指定したメインキーを持つMasterDataを取得する
         /// </summary>
         /// <typeparam name="T">MasterDataの型</typeparam>
-        /// <typeparam name="TKey">主キーの型</typeparam>
-        /// <param name="key">主キー</param>
+        /// <typeparam name="TKey">メインキーの型</typeparam>
+        /// <param name="key">メインキー</param>
         /// <returns>見つかったデータ。存在しない場合はnull</returns>
         T Get<T, TKey>(TKey key) where T : class, IMasterDataObject<TKey>;
         
