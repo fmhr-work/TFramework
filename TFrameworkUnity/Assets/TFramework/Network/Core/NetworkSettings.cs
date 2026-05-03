@@ -34,6 +34,10 @@ namespace TFramework.Network
                         }
                     }
 #endif
+                    if (_instance == null)
+                    {
+                        _instance = CreateInstance<NetworkSettings>();
+                    }
                 }
                 return _instance;
             }

@@ -38,7 +38,8 @@ namespace TFramework.Time
                     _instance = Resources.Load<TimeSettings>("TimeSettings");
                     if (_instance == null)
                     {
-                        TLogger.Warning("[TimeSettings] Settings asset not found in Resources folder"); 
+                        TLogger.Warning("[TimeSettings] Settings asset not found in Resources folder, using default."); 
+                        _instance = CreateInstance<TimeSettings>();
                     }
                 }
                 return _instance;

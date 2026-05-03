@@ -64,7 +64,8 @@ namespace TFramework.Localization
                     _instance = Resources.Load<LocalizationSettings>("LocalizationSettings");
                     if (_instance == null)
                     {
-                        TLogger.Warning("[LocalizationSettings] Settings asset not found in Resources folder");
+                        TLogger.Warning("[LocalizationSettings] Settings asset not found in Resources folder, using default.");
+                        _instance = CreateInstance<LocalizationSettings>();
                     }
                 }
                 return _instance;
