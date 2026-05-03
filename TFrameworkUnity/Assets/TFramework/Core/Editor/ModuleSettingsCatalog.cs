@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TFramework.Audio;
+using TFramework.Input;
 using TFramework.Localization;
 using TFramework.MasterData;
 using TFramework.Network;
@@ -48,7 +49,8 @@ namespace TFramework.Core.Editor
             new("Localization", typeof(LocalizationSettings), "LocalizationSettings", "Assets/Resources/LocalizationSettings.asset"),
             new("Time", typeof(TimeSettings), "TimeSettings", "Assets/Resources/TimeSettings.asset"),
             new("Scene", typeof(SceneSettings), "SceneSettings", "Assets/Resources/SceneSettings.asset"),
-            new("MasterData", typeof(MasterDataSettings), "MasterDataSettings", "Assets/Resources/MasterDataSettings.asset")
+            new("MasterData", typeof(MasterDataSettings), "MasterDataSettings", "Assets/Resources/MasterDataSettings.asset"),
+            new("Input", typeof(InputModuleSettings), "InputModuleSettings", "Assets/Resources/InputModuleSettings.asset")
         };
     }
 }

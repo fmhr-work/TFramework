@@ -1,0 +1,20 @@
+{
+    "name": "TFramework.Input",
+    "rootNamespace": "TFramework.Input",
+    "references": [
+        "TFramework.Core",
+        "TFramework.Debug",
+        "UniTask",
+        "VContainer",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

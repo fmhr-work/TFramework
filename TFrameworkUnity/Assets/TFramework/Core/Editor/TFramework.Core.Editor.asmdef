@@ -11,7 +11,8 @@
     "TFramework.Time",
     "TFramework.Scene",
     "TFramework.MasterData",
-    "TFramework.Debug"
+    "TFramework.Debug",
+    "TFramework.Input"
   ],
   "includePlatforms": [
     "Editor"

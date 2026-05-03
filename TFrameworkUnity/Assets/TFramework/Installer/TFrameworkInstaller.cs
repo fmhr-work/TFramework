@@ -1,5 +1,6 @@
 using TFramework.Core;
 using TFramework.Debug;
+using TFramework.Input;
 using TFramework.Localization;
 using TFramework.MasterData;
 using TFramework.Pool;
@@ -120,6 +121,15 @@ namespace TFramework.Installer
             // Network Manager
             builder.Register<NetworkManager>(Lifetime.Singleton)
                 .As<INetworkService>()
+                .As<IInitializable>()
+                .As<System.IDisposable>();
+
+            // Input Settings
+            builder.RegisterInstance(InputModuleSettings.Instance);
+
+            // Input
+            builder.Register<UnityInputService>(Lifetime.Singleton)
+                .As<IInputService>()
                 .As<IInitializable>()
                 .As<System.IDisposable>();
 
