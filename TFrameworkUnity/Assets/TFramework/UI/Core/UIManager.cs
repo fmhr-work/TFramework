@@ -5,6 +5,8 @@ using Cysharp.Threading.Tasks;
 using TFramework.Debug;
 using TFramework.Resource;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
@@ -18,6 +20,14 @@ namespace TFramework.UI
     /// </summary>
     public sealed class UIManager : IUIService, Core.IInitializable
     {
+        private enum UIRootOrigin
+        {
+            None,
+            ExistingSceneObject,
+            AddressableInstance,
+            DefaultCreated
+        }
+
         #region Dependencies
         private readonly IResourceService _resourceService;
         private readonly UISettings _settings;
@@ -26,15 +36,21 @@ namespace TFramework.UI
 
         #region Private Fields
         private UIRoot _uiRoot;
+        private UIRootOrigin _uiRootOrigin = UIRootOrigin.None;
         private IUIAnimation _defaultTransition;
         private int _loadingRefCount;
         private CancellationTokenSource _cts;
         private bool _isDisposed;
+        private bool _sceneLoadedHooked;
 
         private readonly Dictionary<Type, string> _pageAddressMap = new();
         private readonly Dictionary<Type, string> _dialogAddressMap = new();
         private readonly Dictionary<string, UIPageBase> _pageCache = new();
         private readonly Stack<UIPageBase> _pageStack = new();
+        #endregion
+
+        #region Constants
+        private const string DontDestroyOnLoadSceneName = "DontDestroyOnLoad";
         #endregion
 
         #region Properties
@@ -59,35 +75,8 @@ namespace TFramework.UI
         {
             _defaultTransition = new FadeTransition(_settings.DefaultTransitionDuration);
 
-            // UIRootをロードまたは作成
-            if (!string.IsNullOrEmpty(_settings.UIRootAddress))
-            {
-                try
-                {
-                    _uiRoot = await _resourceService.InstantiateAsync<UIRoot>(_settings.UIRootAddress, null, ct);
-
-                    if (!_uiRoot.TryGetComponent<Canvas>(out var canvas))
-                    {
-                        TLogger.Warning("[UIManager] Canvas component not found on UIRoot, using defaults");
-                    }
-                    if (!_uiRoot.TryGetComponent<CanvasScaler>(out var canvasScaler))
-                    {
-                        TLogger.Warning("[UIManager] CanvasScaler component not found on UIRoot, using defaults");
-                    }
-                    
-                    _uiRoot.Initialize(canvas, canvasScaler);
-                    Object.DontDestroyOnLoad(_uiRoot.gameObject);
-                }
-                catch (Exception ex)
-                {
-                    TLogger.Warning($"[UIManager] Failed to load UIRoot: {ex.Message}. Creating default UIRoot");
-                    CreateDefaultUIRoot();
-                }
-            }
-            else
-            {
-                CreateDefaultUIRoot();
-            }
+            await ResolveUIRootAsync(ct);
+            HookSceneLoaded();
 
             TLogger.Info("[UIManager] Initialized");
         }
@@ -411,6 +400,12 @@ namespace TFramework.UI
             _cts?.Cancel();
             _cts?.Dispose();
 
+            if (_sceneLoadedHooked)
+            {
+                SceneManager.sceneLoaded -= OnSceneLoaded;
+                _sceneLoadedHooked = false;
+            }
+
             foreach (var page in _pageCache.Values)
             {
                 if (page != null && page.gameObject != null)
@@ -425,7 +420,7 @@ namespace TFramework.UI
 
             if (_uiRoot != null && _uiRoot.gameObject != null)
             {
-                _resourceService.ReleaseInstance(_uiRoot.gameObject);
+                ReleaseUIRoot();
             }
 
             TLogger.Info("[UIManager] Disposed");
@@ -433,17 +428,345 @@ namespace TFramework.UI
         #endregion
 
         #region Private Methods
+        private async UniTask ResolveUIRootAsync(CancellationToken ct)
+        {
+            _uiRoot = FindExistingUIRoot(out var existingCount);
+            if (_uiRoot != null)
+            {
+                _uiRootOrigin = UIRootOrigin.ExistingSceneObject;
+                if (existingCount > 1)
+                {
+                    TLogger.Warning($"[UIManager] Multiple UIRoot objects were found. Using '{_uiRoot.gameObject.name}' from scene '{_uiRoot.gameObject.scene.name}'.");
+                }
+
+                FinalizeResolvedUIRoot(_uiRoot);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(_settings.UIRootAddress))
+            {
+                try
+                {
+                    _uiRoot = await _resourceService.InstantiateAsync<UIRoot>(_settings.UIRootAddress, null, ct);
+                    _uiRootOrigin = UIRootOrigin.AddressableInstance;
+
+                    FinalizeResolvedUIRoot(_uiRoot);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    TLogger.Warning($"[UIManager] Failed to load UIRoot: {ex.Message}. Creating default UIRoot");
+                }
+            }
+
+            CreateDefaultUIRoot();
+        }
+
+        private void InitializeResolvedUIRoot(UIRoot uiRoot)
+        {
+            if (uiRoot == null)
+            {
+                return;
+            }
+
+            if (!uiRoot.TryGetComponent<Canvas>(out var canvas))
+            {
+                TLogger.Warning("[UIManager] Canvas component not found on UIRoot, using defaults");
+            }
+
+            if (!uiRoot.TryGetComponent<CanvasScaler>(out var canvasScaler))
+            {
+                TLogger.Warning("[UIManager] CanvasScaler component not found on UIRoot, using defaults");
+            }
+
+            uiRoot.Initialize(canvas, canvasScaler);
+        }
+
         private void CreateDefaultUIRoot()
         {
             var go = new GameObject("UIRoot");
             var canvas = go.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            var canvasScaler = go.AddComponent<CanvasScaler>();
+            go.AddComponent<CanvasScaler>();
             go.AddComponent<GraphicRaycaster>();
 
             _uiRoot = go.AddComponent<UIRoot>();
-            _uiRoot.Initialize(canvas, canvasScaler);
+            _uiRootOrigin = UIRootOrigin.DefaultCreated;
+            FinalizeResolvedUIRoot(_uiRoot);
+        }
+
+        private void HookSceneLoaded()
+        {
+            if (_sceneLoadedHooked)
+            {
+                return;
+            }
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            _sceneLoadedHooked = true;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (_isDisposed || _uiRoot == null)
+            {
+                return;
+            }
+
+            CleanupDuplicateUIRoots(_uiRoot);
+            EnsureSingleEventSystem(_uiRoot);
+        }
+
+        private void FinalizeResolvedUIRoot(UIRoot uiRoot)
+        {
+            if (uiRoot == null || uiRoot.gameObject == null)
+            {
+                return;
+            }
+
+            InitializeResolvedUIRoot(uiRoot);
+            Object.DontDestroyOnLoad(uiRoot.gameObject);
+            CleanupDuplicateUIRoots(uiRoot);
+            EnsureSingleEventSystem(uiRoot);
+        }
+
+        private void CleanupDuplicateUIRoots(UIRoot keeper)
+        {
+            if (keeper == null || keeper.gameObject == null)
+            {
+                return;
+            }
+
+            var roots = Resources.FindObjectsOfTypeAll<UIRoot>();
+            var destroyedCount = 0;
+
+            for (int i = 0; i < roots.Length; i++)
+            {
+                var root = roots[i];
+                if (root == null)
+                {
+                    continue;
+                }
+
+                var go = root.gameObject;
+                if (go == null || !go.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (root == keeper)
+                {
+                    continue;
+                }
+
+                Object.Destroy(go);
+                destroyedCount++;
+            }
+
+            if (destroyedCount > 0)
+            {
+                TLogger.Warning($"[UIManager] Destroyed {destroyedCount} duplicate UIRoot object(s).");
+            }
+        }
+
+        private void EnsureSingleEventSystem(UIRoot root)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            var keepEventSystem = FindEventSystemUnderRoot(root.transform);
+            if (keepEventSystem == null)
+            {
+                keepEventSystem = CreateEventSystem(root.transform);
+                TLogger.Warning($"[UIManager] EventSystem was missing on '{root.gameObject.name}'. A new one was created.");
+            }
+            else if (!keepEventSystem.gameObject.activeSelf)
+            {
+                keepEventSystem.gameObject.SetActive(true);
+            }
+
+            if (!HasInputSystemUIInputModule(keepEventSystem.gameObject))
+            {
+                CreateInputSystemUIInputModule(keepEventSystem.gameObject);
+            }
+
+            var allEventSystems = Resources.FindObjectsOfTypeAll<EventSystem>();
+            int disabledCount = 0;
+            for (int i = 0; i < allEventSystems.Length; i++)
+            {
+                var eventSystem = allEventSystems[i];
+                if (eventSystem == null)
+                {
+                    continue;
+                }
+
+                var go = eventSystem.gameObject;
+                if (go == null || !go.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (eventSystem == keepEventSystem)
+                {
+                    continue;
+                }
+
+                if (go.activeSelf)
+                {
+                    go.SetActive(false);
+                    disabledCount++;
+                }
+            }
+
+            if (disabledCount > 0)
+            {
+                TLogger.Warning($"[UIManager] Disabled {disabledCount} duplicate EventSystem object(s).");
+            }
+        }
+
+        private EventSystem CreateEventSystem(Transform parent)
+        {
+            var go = new GameObject("EventSystem");
+            go.transform.SetParent(parent, false);
+
+            var eventSystem = go.AddComponent<EventSystem>();
+            CreateInputSystemUIInputModule(go);
             Object.DontDestroyOnLoad(go);
+
+            return eventSystem;
+        }
+
+        private static bool HasInputSystemUIInputModule(GameObject go)
+        {
+            if (go == null)
+            {
+                return false;
+            }
+
+            var components = go.GetComponents<Component>();
+            for (int i = 0; i < components.Length; i++)
+            {
+                var component = components[i];
+                if (component == null)
+                {
+                    continue;
+                }
+
+                if (component.GetType().FullName == "UnityEngine.InputSystem.UI.InputSystemUIInputModule")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static Component CreateInputSystemUIInputModule(GameObject go)
+        {
+            if (go == null)
+            {
+                return null;
+            }
+
+            var type = Type.GetType("UnityEngine.InputSystem.UI.InputSystemUIInputModule, Unity.InputSystem");
+            if (type == null)
+            {
+                TLogger.Warning("[UIManager] Unity.InputSystem is not available, cannot create InputSystemUIInputModule.");
+                return null;
+            }
+
+            return go.AddComponent(type);
+        }
+
+        private EventSystem FindEventSystemUnderRoot(Transform root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            var eventSystems = Resources.FindObjectsOfTypeAll<EventSystem>();
+            for (int i = 0; i < eventSystems.Length; i++)
+            {
+                var eventSystem = eventSystems[i];
+                if (eventSystem == null)
+                {
+                    continue;
+                }
+
+                var go = eventSystem.gameObject;
+                if (go == null || !go.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (go.transform.IsChildOf(root))
+                {
+                    return eventSystem;
+                }
+            }
+
+            return null;
+        }
+
+        private UIRoot FindExistingUIRoot(out int count)
+        {
+            count = 0;
+            UIRoot ddolRoot = null;
+            UIRoot activeRoot = null;
+            UIRoot fallbackRoot = null;
+
+            var roots = Resources.FindObjectsOfTypeAll<UIRoot>();
+            for (int i = 0; i < roots.Length; i++)
+            {
+                var root = roots[i];
+                if (root == null)
+                {
+                    continue;
+                }
+
+                var go = root.gameObject;
+                if (go == null || !go.scene.IsValid())
+                {
+                    continue;
+                }
+
+                count++;
+
+                if (string.Equals(go.scene.name, DontDestroyOnLoadSceneName, StringComparison.Ordinal))
+                {
+                    ddolRoot = root;
+                    continue;
+                }
+
+                if (activeRoot == null && go.activeInHierarchy)
+                {
+                    activeRoot = root;
+                }
+
+                if (fallbackRoot == null)
+                {
+                    fallbackRoot = root;
+                }
+            }
+
+            return ddolRoot ?? activeRoot ?? fallbackRoot;
+        }
+
+        private void ReleaseUIRoot()
+        {
+            switch (_uiRootOrigin)
+            {
+                case UIRootOrigin.AddressableInstance:
+                    _resourceService.ReleaseInstance(_uiRoot.gameObject);
+                    break;
+                case UIRootOrigin.ExistingSceneObject:
+                case UIRootOrigin.DefaultCreated:
+                    Object.Destroy(_uiRoot.gameObject);
+                    break;
+            }
         }
 
         private string GetPageAddress<TPage>() where TPage : UIPageBase
