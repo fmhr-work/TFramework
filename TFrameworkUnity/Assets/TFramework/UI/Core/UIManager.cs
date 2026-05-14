@@ -295,23 +295,19 @@ namespace TFramework.UI
             }
             finally
             {
-                if (dialog == null || dialog.gameObject == null)
+                if (dialog != null && dialog.gameObject != null)
                 {
-                    return;
-                }
-
-                if (!completed)
-                {
-                    RemoveCachedDialog(address, dialog);
-                    ((IUIDialog)dialog).OnTerminate();
-                    _resourceService.ReleaseInstance(dialog.gameObject);
-                    return;
-                }
-
-                if (!cacheOnClose)
-                {
-                    ((IUIDialog)dialog).OnTerminate();
-                    _resourceService.ReleaseInstance(dialog.gameObject);
+                    if (!completed)
+                    {
+                        RemoveCachedDialog(address, dialog);
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
+                    else if (!cacheOnClose)
+                    {
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
                 }
             }
         }
@@ -359,23 +355,19 @@ namespace TFramework.UI
             }
             finally
             {
-                if (dialog == null || dialog.gameObject == null)
+                if (dialog != null && dialog.gameObject != null)
                 {
-                    return;
-                }
-
-                if (!completed)
-                {
-                    RemoveCachedDialog(address, dialog);
-                    ((IUIDialog)dialog).OnTerminate();
-                    _resourceService.ReleaseInstance(dialog.gameObject);
-                    return;
-                }
-
-                if (!cacheOnClose)
-                {
-                    ((IUIDialog)dialog).OnTerminate();
-                    _resourceService.ReleaseInstance(dialog.gameObject);
+                    if (!completed)
+                    {
+                        RemoveCachedDialog(address, dialog);
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
+                    else if (!cacheOnClose)
+                    {
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
                 }
             }
         }
