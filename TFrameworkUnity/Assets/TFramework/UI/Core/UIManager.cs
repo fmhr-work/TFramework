@@ -445,13 +445,20 @@ namespace TFramework.UI
 
             foreach (var dialog in _dialogCache.Values)
             {
-                if (dialog is not Component component || component.gameObject == null)
+                Component component = dialog as Component;
+                if (component == null)
+                {
+                    continue;
+                }
+
+                GameObject gameObject = component.gameObject;
+                if (gameObject == null)
                 {
                     continue;
                 }
 
                 dialog.OnTerminate();
-                _resourceService.ReleaseInstance(component.gameObject);
+                _resourceService.ReleaseInstance(gameObject);
             }
 
             _dialogCache.Clear();
