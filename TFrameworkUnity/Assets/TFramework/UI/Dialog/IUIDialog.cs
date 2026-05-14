@@ -30,5 +30,10 @@ namespace TFramework.UI
         /// ダイアログが非表示になった直後に呼び出される
         /// </summary>
         void OnClosed();
+
+        /// <summary>
+        /// ダイアログが最終破棄される直前に呼び出される
+        /// </summary>
+        void OnTerminate();
     }
 }

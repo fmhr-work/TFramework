@@ -46,6 +46,7 @@ namespace TFramework.UI
         private readonly Dictionary<Type, string> _pageAddressMap = new();
         private readonly Dictionary<Type, string> _dialogAddressMap = new();
         private readonly Dictionary<string, UIPageBase> _pageCache = new();
+        private readonly Dictionary<string, IUIDialog> _dialogCache = new();
         private readonly Stack<UIPageBase> _pageStack = new();
         #endregion
 
@@ -252,22 +253,19 @@ namespace TFramework.UI
             var address = GetDialogAddress<TDialog>();
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cts.Token);
 
+            var openParam = ResolveDialogOpenParam(param);
+            var cacheOnClose = openParam.CacheOnClose;
             TDialog dialog = null;
+            bool completed = false;
             try
             {
-                dialog = await _resourceService.InstantiateAsync<TDialog>(address, _uiRoot.GetLayerContainer(UILayer.Dialog), linkedCts.Token);
-
-                // RectTransformを全画面に設定
-                SetupRectTransform(dialog.transform as RectTransform);
-
-                // SetActive(true)の前にVContainerで依存性を注入（階層全体）
-                _container.InjectGameObject(dialog.gameObject);
+                dialog = await GetOrCreateDialogAsync<TDialog>(address, cacheOnClose, linkedCts.Token);
 
                 var lifecycle = (IUIDialog)dialog;
                 dialog.SetVisible(false);
                 dialog.gameObject.SetActive(true);
 
-                await lifecycle.OnPreOpenAsync(param, linkedCts.Token);
+                await lifecycle.OnPreOpenAsync(openParam.Payload, linkedCts.Token);
                 await _defaultTransition.PlayShowAsync(dialog.CanvasGroup, linkedCts.Token);
                 lifecycle.OnOpened();
 
@@ -276,6 +274,12 @@ namespace TFramework.UI
                 await lifecycle.OnPreCloseAsync(linkedCts.Token);
                 await _defaultTransition.PlayHideAsync(dialog.CanvasGroup, linkedCts.Token);
                 lifecycle.OnClosed();
+                completed = true;
+
+                if (cacheOnClose)
+                {
+                    dialog.gameObject.SetActive(false);
+                }
 
                 return result;
             }
@@ -291,10 +295,19 @@ namespace TFramework.UI
             }
             finally
             {
-                // キャンセルや例外発生時も必ず解放する
                 if (dialog != null && dialog.gameObject != null)
                 {
-                    _resourceService.ReleaseInstance(dialog.gameObject);
+                    if (!completed)
+                    {
+                        RemoveCachedDialog(address, dialog);
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
+                    else if (!cacheOnClose)
+                    {
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
                 }
             }
         }
@@ -303,22 +316,19 @@ namespace TFramework.UI
         {
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cts.Token);
 
+            var openParam = ResolveDialogOpenParam(param);
+            var cacheOnClose = openParam.CacheOnClose;
             UIDialogBase dialog = null;
+            bool completed = false;
             try
             {
-                dialog = await _resourceService.InstantiateAsync<UIDialogBase>(address, _uiRoot.GetLayerContainer(UILayer.Dialog), linkedCts.Token);
-
-                // RectTransformを全画面に設定
-                SetupRectTransform(dialog.transform as RectTransform);
-
-                // SetActive(true)の前にVContainerで依存性を注入（階層全体）
-                _container.InjectGameObject(dialog.gameObject);
+                dialog = await GetOrCreateDialogAsync<UIDialogBase>(address, cacheOnClose, linkedCts.Token);
 
                 var lifecycle = (IUIDialog)dialog;
                 dialog.SetVisible(false);
                 dialog.gameObject.SetActive(true);
 
-                await lifecycle.OnPreOpenAsync(param, linkedCts.Token);
+                await lifecycle.OnPreOpenAsync(openParam.Payload, linkedCts.Token);
                 await _defaultTransition.PlayShowAsync(dialog.CanvasGroup, linkedCts.Token);
                 lifecycle.OnOpened();
 
@@ -327,6 +337,12 @@ namespace TFramework.UI
                 await lifecycle.OnPreCloseAsync(linkedCts.Token);
                 await _defaultTransition.PlayHideAsync(dialog.CanvasGroup, linkedCts.Token);
                 lifecycle.OnClosed();
+                completed = true;
+
+                if (cacheOnClose)
+                {
+                    dialog.gameObject.SetActive(false);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -339,10 +355,19 @@ namespace TFramework.UI
             }
             finally
             {
-                // キャンセルや例外発生時も必ず解放する
                 if (dialog != null && dialog.gameObject != null)
                 {
-                    _resourceService.ReleaseInstance(dialog.gameObject);
+                    if (!completed)
+                    {
+                        RemoveCachedDialog(address, dialog);
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
+                    else if (!cacheOnClose)
+                    {
+                        ((IUIDialog)dialog).OnTerminate();
+                        _resourceService.ReleaseInstance(dialog.gameObject);
+                    }
                 }
             }
         }
@@ -417,6 +442,19 @@ namespace TFramework.UI
 
             _pageCache.Clear();
             _pageStack.Clear();
+
+            foreach (var dialog in _dialogCache.Values)
+            {
+                if (dialog is not Component component || component.gameObject == null)
+                {
+                    continue;
+                }
+
+                dialog.OnTerminate();
+                _resourceService.ReleaseInstance(component.gameObject);
+            }
+
+            _dialogCache.Clear();
 
             if (_uiRoot != null && _uiRoot.gameObject != null)
             {
@@ -781,6 +819,49 @@ namespace TFramework.UI
             return _dialogAddressMap.TryGetValue(typeof(TDialog), out var address)
                 ? address
                 : typeof(TDialog).Name;
+        }
+
+        private static UIDialogOpenParam ResolveDialogOpenParam(object param)
+        {
+            return param as UIDialogOpenParam ?? new UIDialogOpenParam(param);
+        }
+
+        private async UniTask<TDialog> GetOrCreateDialogAsync<TDialog>(string address, bool cacheOnClose, CancellationToken ct) where TDialog : Component
+        {
+            if (cacheOnClose &&
+                _dialogCache.TryGetValue(address, out var cachedDialog) &&
+                cachedDialog is TDialog cachedComponent &&
+                cachedComponent != null &&
+                cachedComponent.gameObject != null)
+            {
+                return cachedComponent;
+            }
+
+            TDialog dialog = await _resourceService.InstantiateAsync<TDialog>(address, _uiRoot.GetLayerContainer(UILayer.Dialog), ct);
+            SetupRectTransform(dialog.transform as RectTransform);
+            _container.InjectGameObject(dialog.gameObject);
+
+            if (cacheOnClose && dialog is IUIDialog lifecycle)
+            {
+                _dialogCache[address] = lifecycle;
+            }
+
+            return dialog;
+        }
+
+        private void RemoveCachedDialog(string address, Component dialog)
+        {
+            if (dialog == null)
+            {
+                return;
+            }
+
+            if (_dialogCache.TryGetValue(address, out var cachedDialog) &&
+                cachedDialog is Component cachedComponent &&
+                cachedComponent == dialog)
+            {
+                _dialogCache.Remove(address);
+            }
         }
 
         private async UniTaskVoid ShowLoadingInternal(string message)

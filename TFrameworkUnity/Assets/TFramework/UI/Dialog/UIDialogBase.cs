@@ -68,8 +68,21 @@ namespace TFramework.UI
         {
             _dialogCts?.Cancel();
             _dialogCts?.Dispose();
+            _dialogCts = null;
             _disposables?.Dispose();
+            _disposables = null;
             OnClosed();
+        }
+
+        void IUIDialog.OnTerminate()
+        {
+            _dialogCts?.Cancel();
+            _dialogCts?.Dispose();
+            _dialogCts = null;
+            _disposables?.Dispose();
+            _disposables = null;
+            _completionSource = null;
+            OnTerminate();
         }
         #endregion
 
@@ -89,6 +102,10 @@ namespace TFramework.UI
         }
 
         protected virtual void OnClosed()
+        {
+        }
+
+        protected virtual void OnTerminate()
         {
         }
 
@@ -188,8 +205,21 @@ namespace TFramework.UI
         {
             _dialogCts?.Cancel();
             _dialogCts?.Dispose();
+            _dialogCts = null;
             _disposables?.Dispose();
+            _disposables = null;
             OnClosed();
+        }
+
+        void IUIDialog.OnTerminate()
+        {
+            _dialogCts?.Cancel();
+            _dialogCts?.Dispose();
+            _dialogCts = null;
+            _disposables?.Dispose();
+            _disposables = null;
+            _completionSource = null;
+            OnTerminate();
         }
         #endregion
 
@@ -209,6 +239,10 @@ namespace TFramework.UI
         }
 
         protected virtual void OnClosed()
+        {
+        }
+
+        protected virtual void OnTerminate()
         {
         }
 
