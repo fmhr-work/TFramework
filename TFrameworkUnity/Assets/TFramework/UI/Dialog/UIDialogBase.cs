@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -8,12 +7,11 @@ using UnityEngine.UI;
 namespace TFramework.UI
 {
     /// <summary>
-    /// ダイアログの基底クラス（結果なし）
+    /// 結果なしダイアログ基底クラス
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class UIDialogBase : MonoBehaviour, IUIDialog
+    public abstract class UIDialogBase : MonoBehaviour, IUIDialog, IScenePersistentUI
     {
-        #region Serialized Fields
         [Header("Dialog Settings")]
         [SerializeField]
         private CanvasGroup _canvasGroup;
@@ -23,47 +21,60 @@ namespace TFramework.UI
 
         [SerializeField]
         private bool _closeOnBackgroundClick = true;
-        #endregion
 
-        #region Private Fields
+        [SerializeField]
+        private bool _persistAcrossScenes;
+
         private CancellationTokenSource _dialogCts;
         private UniTaskCompletionSource _completionSource;
         private CompositeDisposable _disposables;
-        #endregion
 
-        #region Properties
+        /// <summary>
+        /// CanvasGroup参照
+        /// </summary>
         public CanvasGroup CanvasGroup => _canvasGroup;
-        protected CancellationToken DialogToken => _dialogCts?.Token ?? CancellationToken.None;
-        #endregion
 
-        #region Lifecycle (IUIDialog)
+        /// <summary>
+        /// scene跨ぎ保持可否
+        /// </summary>
+        public bool PersistAcrossScenes => _persistAcrossScenes;
+
+        /// <summary>
+        /// ダイアログ存続中のキャンセルトークン
+        /// </summary>
+        protected CancellationToken DialogToken => _dialogCts?.Token ?? CancellationToken.None;
+
+        /// <summary>
+        /// 表示前初期化経路
+        /// </summary>
         async UniTask IUIDialog.OnPreOpenAsync(object param, CancellationToken ct)
         {
             _dialogCts = new CancellationTokenSource();
             _completionSource = new UniTaskCompletionSource();
             _disposables = new CompositeDisposable();
-
-            // 背景クリックイベント登録（Unity event methodsを使わずR3で実装）
-            if (_backgroundButton != null && _closeOnBackgroundClick)
-            {
-                _backgroundButton.OnClickAsObservable()
-                    .Subscribe(_ => OnBackgroundClicked())
-                    .AddTo(_disposables);
-            }
-
+            SubscribeBackgroundClose();
             await OnPreOpenAsync(param, ct);
         }
 
+        /// <summary>
+        /// 表示確定経路
+        /// </summary>
         void IUIDialog.OnOpened()
         {
             OnOpened();
         }
 
+        /// <summary>
+        /// 非表示前処理経路
+        /// </summary>
         async UniTask IUIDialog.OnPreCloseAsync(CancellationToken ct)
         {
             await OnPreCloseAsync(ct);
         }
 
+        /// <summary>
+        /// 非表示確定経路
+        /// </summary>
         void IUIDialog.OnClosed()
         {
             _dialogCts?.Cancel();
@@ -74,6 +85,9 @@ namespace TFramework.UI
             OnClosed();
         }
 
+        /// <summary>
+        /// 最終破棄経路
+        /// </summary>
         void IUIDialog.OnTerminate()
         {
             _dialogCts?.Cancel();
@@ -84,9 +98,7 @@ namespace TFramework.UI
             _completionSource = null;
             OnTerminate();
         }
-        #endregion
 
-        #region Protected Virtual Methods
         protected virtual UniTask OnPreOpenAsync(object param, CancellationToken ct)
         {
             return UniTask.CompletedTask;
@@ -113,9 +125,10 @@ namespace TFramework.UI
         {
             Close();
         }
-        #endregion
 
-        #region Public Methods
+        /// <summary>
+        /// 閉鎖待機
+        /// </summary>
         public async UniTask WaitUntilClosedAsync(CancellationToken ct = default)
         {
             if (_completionSource == null)
@@ -126,31 +139,51 @@ namespace TFramework.UI
             await _completionSource.Task.AttachExternalCancellation(ct);
         }
 
+        /// <summary>
+        /// 閉鎖要求
+        /// </summary>
         public void Close()
         {
             _completionSource?.TrySetResult();
         }
 
+        /// <summary>
+        /// 表示状態反映
+        /// </summary>
         public void SetVisible(bool visible)
         {
             if (_canvasGroup == null)
+            {
                 return;
+            }
 
             _canvasGroup.alpha = visible ? 1f : 0f;
             _canvasGroup.interactable = visible;
             _canvasGroup.blocksRaycasts = visible;
         }
-        #endregion
+
+        /// <summary>
+        /// 背景クリック購読登録
+        /// </summary>
+        private void SubscribeBackgroundClose()
+        {
+            if (_backgroundButton == null || !_closeOnBackgroundClick)
+            {
+                return;
+            }
+
+            _backgroundButton.OnClickAsObservable()
+                .Subscribe(_ => OnBackgroundClicked())
+                .AddTo(_disposables);
+        }
     }
 
     /// <summary>
-    /// ダイアログの基底クラス（結果あり）
+    /// 結果ありダイアログ基底クラス
     /// </summary>
-    /// <typeparam name="TResult">結果の型</typeparam>
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class UIDialogBase<TResult> : MonoBehaviour, IUIDialog
+    public abstract class UIDialogBase<TResult> : MonoBehaviour, IUIDialog, IScenePersistentUI
     {
-        #region Serialized Fields
         [Header("Dialog Settings")]
         [SerializeField]
         private CanvasGroup _canvasGroup;
@@ -160,47 +193,60 @@ namespace TFramework.UI
 
         [SerializeField]
         private bool _closeOnBackgroundClick = true;
-        #endregion
 
-        #region Private Fields
+        [SerializeField]
+        private bool _persistAcrossScenes;
+
         private CancellationTokenSource _dialogCts;
         private UniTaskCompletionSource<TResult> _completionSource;
         private CompositeDisposable _disposables;
-        #endregion
 
-        #region Properties
+        /// <summary>
+        /// CanvasGroup参照
+        /// </summary>
         public CanvasGroup CanvasGroup => _canvasGroup;
-        protected CancellationToken DialogToken => _dialogCts?.Token ?? CancellationToken.None;
-        #endregion
 
-        #region Lifecycle (IUIDialog)
+        /// <summary>
+        /// scene跨ぎ保持可否
+        /// </summary>
+        public bool PersistAcrossScenes => _persistAcrossScenes;
+
+        /// <summary>
+        /// ダイアログ存続中のキャンセルトークン
+        /// </summary>
+        protected CancellationToken DialogToken => _dialogCts?.Token ?? CancellationToken.None;
+
+        /// <summary>
+        /// 表示前初期化経路
+        /// </summary>
         async UniTask IUIDialog.OnPreOpenAsync(object param, CancellationToken ct)
         {
             _dialogCts = new CancellationTokenSource();
             _completionSource = new UniTaskCompletionSource<TResult>();
             _disposables = new CompositeDisposable();
-
-            // 背景クリックイベント登録
-            if (_backgroundButton != null && _closeOnBackgroundClick)
-            {
-                _backgroundButton.OnClickAsObservable()
-                    .Subscribe(_ => OnBackgroundClicked())
-                    .AddTo(_disposables);
-            }
-
+            SubscribeBackgroundClose();
             await OnPreOpenAsync(param, ct);
         }
 
+        /// <summary>
+        /// 表示確定経路
+        /// </summary>
         void IUIDialog.OnOpened()
         {
             OnOpened();
         }
 
+        /// <summary>
+        /// 非表示前処理経路
+        /// </summary>
         async UniTask IUIDialog.OnPreCloseAsync(CancellationToken ct)
         {
             await OnPreCloseAsync(ct);
         }
 
+        /// <summary>
+        /// 非表示確定経路
+        /// </summary>
         void IUIDialog.OnClosed()
         {
             _dialogCts?.Cancel();
@@ -211,6 +257,9 @@ namespace TFramework.UI
             OnClosed();
         }
 
+        /// <summary>
+        /// 最終破棄経路
+        /// </summary>
         void IUIDialog.OnTerminate()
         {
             _dialogCts?.Cancel();
@@ -221,9 +270,7 @@ namespace TFramework.UI
             _completionSource = null;
             OnTerminate();
         }
-        #endregion
 
-        #region Protected Virtual Methods
         protected virtual UniTask OnPreOpenAsync(object param, CancellationToken ct)
         {
             return UniTask.CompletedTask;
@@ -250,9 +297,10 @@ namespace TFramework.UI
         {
             CloseWithResult(default);
         }
-        #endregion
 
-        #region Public Methods
+        /// <summary>
+        /// result待機
+        /// </summary>
         public async UniTask<TResult> WaitForResultAsync(CancellationToken ct = default)
         {
             if (_completionSource == null)
@@ -263,20 +311,42 @@ namespace TFramework.UI
             return await _completionSource.Task.AttachExternalCancellation(ct);
         }
 
+        /// <summary>
+        /// result確定と閉鎖
+        /// </summary>
         public void CloseWithResult(TResult result)
         {
             _completionSource?.TrySetResult(result);
         }
 
+        /// <summary>
+        /// 表示状態反映
+        /// </summary>
         public void SetVisible(bool visible)
         {
             if (_canvasGroup == null)
+            {
                 return;
+            }
 
             _canvasGroup.alpha = visible ? 1f : 0f;
             _canvasGroup.interactable = visible;
             _canvasGroup.blocksRaycasts = visible;
         }
-        #endregion
+
+        /// <summary>
+        /// 背景クリック購読登録
+        /// </summary>
+        private void SubscribeBackgroundClose()
+        {
+            if (_backgroundButton == null || !_closeOnBackgroundClick)
+            {
+                return;
+            }
+
+            _backgroundButton.OnClickAsObservable()
+                .Subscribe(_ => OnBackgroundClicked())
+                .AddTo(_disposables);
+        }
     }
 }

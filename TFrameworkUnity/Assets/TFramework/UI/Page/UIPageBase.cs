@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -7,12 +6,10 @@ using UnityEngine;
 namespace TFramework.UI
 {
     /// <summary>
-    /// ページの基底クラス
-    /// すべてのUIページはこのクラスを継承する
+    /// ページ基底クラス
     /// </summary>
-    public abstract class UIPageBase : MonoBehaviour, IUIPageLifecycle
+    public abstract class UIPageBase : MonoBehaviour, IUIPageLifecycle, IScenePersistentUI
     {
-        #region Serialized Fields
         [Header("Page Settings")]
         [SerializeField]
         private CanvasGroup _canvasGroup;
@@ -22,102 +19,115 @@ namespace TFramework.UI
 
         [SerializeField]
         private bool _cacheOnClose = true;
-        #endregion
 
-        #region Private Fields
+        [SerializeField]
+        private bool _persistAcrossScenes;
+
         private bool _isInitialized;
         private CancellationTokenSource _pageCts;
 
         private readonly Subject<Unit> _onOpenedSubject = new();
         private readonly Subject<Unit> _onClosedSubject = new();
-        #endregion
 
-        #region Properties
         /// <summary>
-        /// ページのAddressableキー
+        /// Addressableキー参照
         /// </summary>
         public string PageAddress => _pageAddress;
 
         /// <summary>
-        /// ページを閉じた時にキャッシュするかどうか
+        /// Close後の再利用可否
         /// </summary>
         public bool CacheOnClose => _cacheOnClose;
 
         /// <summary>
-        /// ページが初期化済みかどうか
+        /// scene跨ぎ保持可否
+        /// </summary>
+        public bool PersistAcrossScenes => _persistAcrossScenes;
+
+        /// <summary>
+        /// 初期化完了状態
         /// </summary>
         public bool IsInitialized => _isInitialized;
 
         /// <summary>
-        /// ページが表示中かどうか
+        /// 表示状態参照
         /// </summary>
-        public bool IsVisible => _canvasGroup != null && _canvasGroup.alpha > 0;
+        public bool IsVisible => _canvasGroup != null && _canvasGroup.alpha > 0f;
 
         /// <summary>
-        /// CanvasGroup
+        /// CanvasGroup参照
         /// </summary>
         public CanvasGroup CanvasGroup => _canvasGroup;
 
         /// <summary>
-        /// ページ固有のCancellationToken。ページが破棄されるまで有効
+        /// page表示中キャンセルトークン
         /// </summary>
         protected CancellationToken PageToken => _pageCts?.Token ?? CancellationToken.None;
-        #endregion
 
-        #region Observable Methods
         /// <summary>
-        /// ページが開かれた時に発行されるObservable
+        /// Open通知
         /// </summary>
         public Observable<Unit> OnOpenedAsObservable() => _onOpenedSubject;
 
         /// <summary>
-        /// ページが閉じられた時に発行されるObservable
+        /// Close通知
         /// </summary>
         public Observable<Unit> OnClosedAsObservable() => _onClosedSubject;
-        #endregion
 
-        #region Lifecycle (IUIPageLifecycle)
+        /// <summary>
+        /// 初回初期化経路
+        /// </summary>
         async UniTask IUIPageLifecycle.OnInitializeAsync(CancellationToken ct)
         {
             if (_isInitialized)
+            {
                 return;
+            }
 
             _pageCts = new CancellationTokenSource();
             await OnInitializeAsync(ct);
             _isInitialized = true;
         }
 
+        /// <summary>
+        /// 表示前処理経路
+        /// </summary>
         async UniTask IUIPageLifecycle.OnPreOpenAsync(object param, CancellationToken ct)
         {
             await OnPreOpenAsync(param, ct);
         }
 
+        /// <summary>
+        /// 表示確定経路
+        /// </summary>
         void IUIPageLifecycle.OnOpened()
         {
-            // ページが再表示される際に新しいCancellationTokenSourceを作成
-            _pageCts?.Cancel();
-            _pageCts?.Dispose();
-            _pageCts = new CancellationTokenSource();
-            
+            RenewPageToken();
             OnOpened();
             _onOpenedSubject.OnNext(Unit.Default);
         }
 
+        /// <summary>
+        /// 非表示前処理経路
+        /// </summary>
         async UniTask IUIPageLifecycle.OnPreCloseAsync(CancellationToken ct)
         {
             await OnPreCloseAsync(ct);
         }
 
+        /// <summary>
+        /// 非表示確定経路
+        /// </summary>
         void IUIPageLifecycle.OnClosed()
         {
-            // ページが閉じられた時に全ての購読をキャンセル
-            // PageTokenを使った購読は自動的にクリーンアップされる
             _pageCts?.Cancel();
-            
             OnClosed();
             _onClosedSubject.OnNext(Unit.Default);
         }
 
+        /// <summary>
+        /// 最終破棄経路
+        /// </summary>
         void IUIPageLifecycle.OnTerminate()
         {
             _pageCts?.Cancel();
@@ -128,76 +138,55 @@ namespace TFramework.UI
             OnTerminate();
         }
 
+        /// <summary>
+        /// 戻る操作委譲
+        /// </summary>
         bool IUIPageLifecycle.OnBackPressed()
         {
             return OnBackPressed();
         }
-        #endregion
 
-        #region Protected Virtual Methods
-        /// <summary>
-        /// ページの初期化処理。オーバーライドして使用する
-        /// </summary>
         protected virtual UniTask OnInitializeAsync(CancellationToken ct)
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        /// ページが表示される直前の処理。オーバーライドして使用する
-        /// </summary>
         protected virtual UniTask OnPreOpenAsync(object param, CancellationToken ct)
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        /// ページが表示された直後の処理。オーバーライドして使用する
-        /// </summary>
         protected virtual void OnOpened()
         {
         }
 
-        /// <summary>
-        /// ページが非表示になる直前の処理。オーバーライドして使用する
-        /// </summary>
         protected virtual UniTask OnPreCloseAsync(CancellationToken ct)
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        /// ページが非表示になった直後の処理。オーバーライドして使用する
-        /// </summary>
         protected virtual void OnClosed()
         {
         }
 
-        /// <summary>
-        /// ページが破棄される時の処理。オーバーライドして使用する
-        /// </summary>
         protected virtual void OnTerminate()
         {
         }
 
-        /// <summary>
-        /// 戻るボタンが押された時の処理。オーバーライドして使用する
-        /// </summary>
-        /// <returns>trueを返すとデフォルトの戻る処理をキャンセル</returns>
         protected virtual bool OnBackPressed()
         {
             return false;
         }
-        #endregion
 
-        #region Public Methods
         /// <summary>
-        /// ページの表示状態を設定する
+        /// 表示状態反映
         /// </summary>
         public void SetVisible(bool visible)
         {
             if (_canvasGroup == null)
+            {
                 return;
+            }
 
             _canvasGroup.alpha = visible ? 1f : 0f;
             _canvasGroup.interactable = visible;
@@ -205,16 +194,27 @@ namespace TFramework.UI
         }
 
         /// <summary>
-        /// ページのインタラクション可否を設定する
+        /// 入力可否反映
         /// </summary>
         public void SetInteractable(bool interactable)
         {
             if (_canvasGroup == null)
+            {
                 return;
+            }
 
             _canvasGroup.interactable = interactable;
             _canvasGroup.blocksRaycasts = interactable;
         }
-        #endregion
+
+        /// <summary>
+        /// 再表示前のトークン更新
+        /// </summary>
+        private void RenewPageToken()
+        {
+            _pageCts?.Cancel();
+            _pageCts?.Dispose();
+            _pageCts = new CancellationTokenSource();
+        }
     }
 }
