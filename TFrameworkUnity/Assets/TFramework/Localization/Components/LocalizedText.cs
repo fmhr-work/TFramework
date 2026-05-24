@@ -1,5 +1,6 @@
 using R3;
 using TMPro;
+using TFramework.Debug;
 using UnityEngine;
 using VContainer;
 
@@ -65,7 +66,7 @@ namespace TFramework.Localization
         {
             if (!TryGetComponent<TMP_Text>(out _text))
             {
-                UnityEngine.Debug.LogError($"[LocalizedText] TMP_Text not found on {gameObject.name}", this);
+                TLogger.Error($"[LocalizedText] TMP_Text not found on {gameObject.name}", "Localization");
                 return;
             }
 
