@@ -177,7 +177,14 @@ namespace TFramework.MasterData.Editor
 
             try
             {
-                switch (csvType.ToLower())
+                string normalizedType = csvType.ToLower();
+                if (IsEnumType(normalizedType))
+                {
+                    // enum:EffectTypeのような指定も同一処理で吸収する
+                    return Enum.Parse(targetType, str);
+                }
+
+                switch (normalizedType)
                 {
                     case "int": return int.Parse(str);
                     case "long": return long.Parse(str);
@@ -188,9 +195,6 @@ namespace TFramework.MasterData.Editor
                         return false;
                     case "string": return str;
                     case "datetime": return DateTime.Parse(str, CultureInfo.InvariantCulture);
-                    case "enum":
-                        // Enumパース
-                        return Enum.Parse(targetType, str);
                     default: return str;
                 }
             }
@@ -199,6 +203,12 @@ namespace TFramework.MasterData.Editor
                 Debug.LogWarning($"[MasterData] 値のパースに失敗: {str} (Type: {csvType})");
                 return GetDefaultValue(targetType);
             }
+        }
+
+        private static bool IsEnumType(string csvType)
+        {
+            return !string.IsNullOrEmpty(csvType) &&
+                   (csvType == "enum" || csvType.StartsWith("enum:"));
         }
 
         private static object GetDefaultValue(Type t)

@@ -157,6 +157,7 @@ namespace TFramework.MasterData.Editor
 
             var classNames = new System.Collections.Generic.List<string>();
             bool errorOccurred = false;
+            CodeGenerator.ResetSharedEnumDefinitions();
 
             foreach (var file in files)
             {
@@ -178,6 +179,7 @@ namespace TFramework.MasterData.Editor
 
             if (classNames.Count > 0)
             {
+                CodeGenerator.GenerateSharedEnumFile(codeOutputPath);
                 CodeGenerator.GenerateServiceExtensions(classNames, codeOutputPath);
             }
 
