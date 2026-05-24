@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using R3;
+using TFramework.Debug;
 
 namespace TFramework.Core
 {
@@ -86,7 +87,7 @@ namespace TFramework.Core
                 var message = string.IsNullOrEmpty(context)
                     ? $"[TFramework] Observable error: {ex}"
                     : $"[TFramework] Observable error in {context}: {ex}";
-                UnityEngine.Debug.LogError(message);
+                TLogger.Error(message, "Core");
                 return Observable.Empty<T>();
             });
         }
