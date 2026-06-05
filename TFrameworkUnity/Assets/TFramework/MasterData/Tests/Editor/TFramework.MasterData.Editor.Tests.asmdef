@@ -1,0 +1,22 @@
+{
+    "name": "TFramework.MasterData.Editor.Tests",
+    "rootNamespace": "TFramework.MasterData.Editor.Tests",
+    "references": [
+        "TFramework.MasterData",
+        "TFramework.MasterData.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "noEngineReferences": false
+}
