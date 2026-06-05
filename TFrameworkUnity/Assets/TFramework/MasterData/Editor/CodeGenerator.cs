@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using TFramework.Core;
 using TFramework.Debug;
 using UnityEditor;
@@ -19,7 +18,6 @@ namespace TFramework.MasterData.Editor
         private const string GeneratedNamespace = "Game.MasterData.Generated";
         private const string SharedEnumFileName = "MasterDataEnums.generated.cs";
         private static readonly Dictionary<string, HashSet<string>> SharedEnumDefinitions = new Dictionary<string, HashSet<string>>();
-        private static readonly Regex InvalidIdentifierRegex = new Regex(@"[^a-zA-Z0-9_]", RegexOptions.Compiled);
 
         /// <summary>
         /// 共有Enum定義の収集状態を初期化する
@@ -187,7 +185,8 @@ namespace TFramework.MasterData.Editor
             for (int i = 0; i < variableNames.Length; i++)
             {
                 string type = types[i];
-                if (type == "dummy")
+                string normalizedType = type.ToLower();
+                if (normalizedType == "dummy")
                 {
                     continue;
                 }
@@ -195,9 +194,9 @@ namespace TFramework.MasterData.Editor
                 string name = variableNames[i];
                 string desc = descriptions[i];
 
-                string csharpType = IsEnumType(type)
+                string csharpType = MasterDataEnumUtility.IsEnumType(type)
                     ? enumTypeNames[i]
-                    : ConvertToCSharpType(type);
+                    : ConvertToCSharpType(normalizedType);
 
                 sb.AppendLine("        /// <summary>");
                 sb.AppendLine($"        /// {desc}");
@@ -226,7 +225,7 @@ namespace TFramework.MasterData.Editor
 
             for (int col = 0; col < types.Length; col++)
             {
-                if (!IsEnumType(types[col]))
+                if (!MasterDataEnumUtility.IsEnumType(types[col]))
                 {
                     continue;
                 }
@@ -251,7 +250,7 @@ namespace TFramework.MasterData.Editor
                         continue;
                     }
 
-                    values.Add(SanitizeIdentifier(rawValue));
+                    values.Add(MasterDataEnumUtility.NormalizeIdentifier(rawValue));
                 }
 
                 enumTypeNames[col] = enumName;
@@ -369,7 +368,7 @@ namespace TFramework.MasterData.Editor
 
         private static string ConvertToCSharpType(string csvType)
         {
-            if (IsEnumType(csvType))
+            if (MasterDataEnumUtility.IsEnumType(csvType))
             {
                 return "int";
             }
@@ -387,46 +386,18 @@ namespace TFramework.MasterData.Editor
         }
 
         /// <summary>
-        /// Enum型指定か判定する
-        /// </summary>
-        private static bool IsEnumType(string csvType)
-        {
-            return !string.IsNullOrEmpty(csvType) &&
-                   (csvType == "enum" || csvType.StartsWith("enum:"));
-        }
-
-        /// <summary>
         /// CSV型指定からEnum型名を解決する
         /// </summary>
         private static string ResolveEnumTypeName(string className, string variableName, string csvType)
         {
-            if (string.IsNullOrEmpty(csvType) || csvType == "enum")
+            if (string.IsNullOrEmpty(csvType) ||
+                string.Equals(csvType, "enum", System.StringComparison.OrdinalIgnoreCase))
             {
-                return $"{className}{SanitizeIdentifier(variableName)}Enum";
+                return $"{className}{MasterDataEnumUtility.NormalizeIdentifier(variableName)}Enum";
             }
 
             string rawEnumName = csvType.Substring("enum:".Length);
-            return SanitizeIdentifier(rawEnumName);
-        }
-
-        /// <summary>
-        /// C#識別子として安全な形式へ正規化する
-        /// </summary>
-        private static string SanitizeIdentifier(string rawValue)
-        {
-            if (string.IsNullOrWhiteSpace(rawValue))
-            {
-                return "_";
-            }
-
-            string trimmed = rawValue.Trim();
-            string normalized = InvalidIdentifierRegex.Replace(trimmed, "_");
-            if (char.IsDigit(normalized[0]))
-            {
-                normalized = $"_{normalized}";
-            }
-
-            return normalized;
+            return MasterDataEnumUtility.NormalizeIdentifier(rawEnumName);
         }
     }
 }
