@@ -174,10 +174,11 @@ namespace TFramework.MasterData.Editor
             try
             {
                 string normalizedType = csvType.ToLower();
-                if (IsEnumType(normalizedType))
+                if (MasterDataEnumUtility.IsEnumType(normalizedType))
                 {
                     // enum:EffectTypeのような指定も同一処理で吸収する
-                    return Enum.Parse(targetType, str);
+                    string normalizedValue = MasterDataEnumUtility.NormalizeIdentifier(str);
+                    return Enum.Parse(targetType, normalizedValue);
                 }
 
                 switch (normalizedType)
@@ -199,12 +200,6 @@ namespace TFramework.MasterData.Editor
                 TLogger.Warning($"値のパースに失敗: {str} (Type: {csvType})", "MasterData");
                 return GetDefaultValue(targetType);
             }
-        }
-
-        private static bool IsEnumType(string csvType)
-        {
-            return !string.IsNullOrEmpty(csvType) &&
-                   (csvType == "enum" || csvType.StartsWith("enum:"));
         }
 
         private static Type FindGeneratedType(Assembly[] assemblies, string preferredAssemblyName, string fullTypeName)
