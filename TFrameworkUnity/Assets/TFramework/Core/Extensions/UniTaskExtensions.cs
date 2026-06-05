@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TFramework.Debug;
 
 namespace TFramework.Core
 {
@@ -14,7 +15,7 @@ namespace TFramework.Core
         /// Fire-and-forgetパターンで使用
         /// </summary>
         /// <param name="task">実行するタスク</param>
-        /// <param name="onError">エラー発生時のコールバック（省略時はDebug.LogError）</param>
+        /// <param name="onError">エラー発生時のコールバック（省略時はTLogger.Error）</param>
         public static void ForgetWithErrorHandler(this UniTask task, Action<Exception> onError = null)
         {
             task.Forget(ex =>
@@ -31,7 +32,7 @@ namespace TFramework.Core
                 }
                 else
                 {
-                    UnityEngine.Debug.LogError($"[TFramework] Unhandled exception in async operation: {ex}");
+                    TLogger.Error($"Unhandled exception in async operation: {ex}", "Core");
                 }
             });
         }
@@ -112,8 +113,9 @@ namespace TFramework.Core
                     if (i < retryCount)
                     {
 #if DEBUG
-                        UnityEngine.Debug.LogWarning(
-                            $"[TFramework] Retry {i + 1}/{retryCount} after error: {ex.Message}");
+                        TLogger.Warning(
+                            $"Retry {i + 1}/{retryCount} after error: {ex.Message}",
+                            "Core");
 #endif
                         await UniTask.Delay(delay, cancellationToken: ct);
                     }

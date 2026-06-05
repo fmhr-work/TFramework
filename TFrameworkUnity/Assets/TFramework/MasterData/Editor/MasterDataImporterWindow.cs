@@ -1,4 +1,5 @@
 using System.IO;
+using TFramework.Debug;
 using UnityEditor;
 using UnityEngine;
 
@@ -148,7 +149,7 @@ namespace TFramework.MasterData.Editor
             var files = Directory.GetFiles(csvValuesPath, "*.csv");
             if (files.Length == 0)
             {
-                Debug.LogWarning("[MasterData] .csvファイルが見つからない");
+                TLogger.Warning(".csvファイルが見つからない", "MasterData");
                 return;
             }
 
@@ -157,6 +158,7 @@ namespace TFramework.MasterData.Editor
 
             var classNames = new System.Collections.Generic.List<string>();
             bool errorOccurred = false;
+            CodeGenerator.ResetSharedEnumDefinitions();
 
             foreach (var file in files)
             {
@@ -171,14 +173,19 @@ namespace TFramework.MasterData.Editor
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError($"[MasterData] コード生成失敗 ({file}): {e.Message}");
+                    TLogger.Error($"コード生成失敗 ({file}): {e.Message}", e, "MasterData");
                     errorOccurred = true;
                 }
             }
 
             if (classNames.Count > 0)
             {
+                CodeGenerator.GenerateSharedEnumFile(codeOutputPath);
                 CodeGenerator.GenerateServiceExtensions(classNames, codeOutputPath);
+                if (_settings.GenerateAssemblyDefinition)
+                {
+                    CodeGenerator.GenerateAssemblyDefinitionFile(codeOutputPath, _settings.AssemblyDefinitionName);
+                }
             }
 
             if (errorOccurred)
@@ -193,7 +200,7 @@ namespace TFramework.MasterData.Editor
             // Refresh to trigger compilation
             AssetDatabase.Refresh();
             
-            Debug.Log("[MasterData] コード生成完了。コンパイル後にAsset更新が実行される。");
+            TLogger.Info("コード生成完了。コンパイル後にAsset更新が実行される。", "MasterData");
         }
     }
 }

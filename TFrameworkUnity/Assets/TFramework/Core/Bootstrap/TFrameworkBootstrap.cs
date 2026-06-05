@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TFramework.Debug;
 using UnityEngine;
 using VContainer;
 
@@ -58,7 +59,7 @@ namespace TFramework.Core
                 OnInitialized?.Invoke();
 
 #if DEBUG
-                Debug.Log("[TFramework] Framework initialized successfully.");
+                TLogger.Info("Framework initialized successfully.", "Core");
 #endif
             }
             catch (OperationCanceledException)
@@ -67,7 +68,7 @@ namespace TFramework.Core
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[TFramework] Framework initialization failed: {ex}");
+                TLogger.Error($"Framework initialization failed: {ex}", ex, "Core");
             }
         }
 
@@ -78,7 +79,7 @@ namespace TFramework.Core
         {
             if (_container == null)
             {
-                Debug.LogWarning("[TFramework] Container not injected. Skipping service initialization.");
+                TLogger.Warning("Container not injected. Skipping service initialization.", "Core");
                 return;
             }
 
@@ -96,7 +97,7 @@ namespace TFramework.Core
                 await initializable.InitializeAsync(ct);
 
 #if DEBUG
-                Debug.Log($"[TFramework] Initialized: {initializable.GetType().Name}");
+                TLogger.Info($"Initialized: {initializable.GetType().Name}", "Core");
 #endif
             }
 

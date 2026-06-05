@@ -1,4 +1,5 @@
 using UnityEngine;
+using TFramework.Debug;
 
 namespace TFramework.Core
 {
@@ -26,10 +27,10 @@ namespace TFramework.Core
                     {
                         _instance = CreateInstance<TFrameworkSettings>();
 #if UNITY_EDITOR
-                        UnityEngine.Debug.LogWarning(
-                            "[TFramework] TFrameworkSettings not found in Resources. " +
-                            "Please create one via 'Create > TFramework > Settings' and place it in a Resources folder."
-                        );
+                        TLogger.Warning(
+                            "TFrameworkSettings not found in Resources. " +
+                            "Please create one via 'Create > TFramework > Settings' and place it in a Resources folder.",
+                            "Core");
 #endif
                     }
                 }

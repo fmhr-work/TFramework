@@ -8,6 +8,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using TFramework.Core;
+using TFramework.Debug;
 using TFramework.MasterData;
 
 namespace TFramework.MasterData.Editor
@@ -75,7 +76,7 @@ namespace TFramework.MasterData.Editor
 
             if (assembly == null)
             {
-                Debug.LogError("[MasterData] Assembly-CSharpが見つからないため、型情報を取得できない。");
+                TLogger.Error("Assembly-CSharpが見つからないため、型情報を取得できない。", "MasterData");
                 return;
             }
 
@@ -93,7 +94,7 @@ namespace TFramework.MasterData.Editor
 
                     if (dataClassType == null || containerClassType == null)
                     {
-                        Debug.LogError($"[MasterData] クラスが見つからない: {className}. コード生成を実行したか？");
+                        TLogger.Error($"クラスが見つからない: {className}. コード生成を実行したか？", "MasterData");
                         continue;
                     }
 
@@ -150,16 +151,16 @@ namespace TFramework.MasterData.Editor
                         setDataMethod.Invoke(container, new object[] { dataList });
                         EditorUtility.SetDirty(container);
                         generatedContainers.Add(container);
-                        Debug.Log($"[MasterData] Asset Updated: {className}");
+                        TLogger.Info($"Asset Updated: {className}", "MasterData");
                     }
                     else
                     {
-                        Debug.LogError($"[MasterData] SetDataメソッドが見つからない: {containerClassName}");
+                        TLogger.Error($"SetDataメソッドが見つからない: {containerClassName}", "MasterData");
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[MasterData] Asset更新失敗 ({file}): {e}");
+                    TLogger.Error($"Asset更新失敗 ({file}): {e}", e, "MasterData");
                 }
             }
 
@@ -168,7 +169,7 @@ namespace TFramework.MasterData.Editor
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
             
-            Debug.Log("[MasterData] 全てのアセット更新が完了した。");
+            TLogger.Info("全てのアセット更新が完了した。", "MasterData");
         }
 
         private static object ParseValue(string str, string csvType, Type targetType)
@@ -177,7 +178,14 @@ namespace TFramework.MasterData.Editor
 
             try
             {
-                switch (csvType.ToLower())
+                string normalizedType = csvType.ToLower();
+                if (IsEnumType(normalizedType))
+                {
+                    // enum:EffectTypeのような指定も同一処理で吸収する
+                    return Enum.Parse(targetType, str);
+                }
+
+                switch (normalizedType)
                 {
                     case "int": return int.Parse(str);
                     case "long": return long.Parse(str);
@@ -188,17 +196,20 @@ namespace TFramework.MasterData.Editor
                         return false;
                     case "string": return str;
                     case "datetime": return DateTime.Parse(str, CultureInfo.InvariantCulture);
-                    case "enum":
-                        // Enumパース
-                        return Enum.Parse(targetType, str);
                     default: return str;
                 }
             }
             catch
             {
-                Debug.LogWarning($"[MasterData] 値のパースに失敗: {str} (Type: {csvType})");
+                TLogger.Warning($"値のパースに失敗: {str} (Type: {csvType})", "MasterData");
                 return GetDefaultValue(targetType);
             }
+        }
+
+        private static bool IsEnumType(string csvType)
+        {
+            return !string.IsNullOrEmpty(csvType) &&
+                   (csvType == "enum" || csvType.StartsWith("enum:"));
         }
 
         private static object GetDefaultValue(Type t)
