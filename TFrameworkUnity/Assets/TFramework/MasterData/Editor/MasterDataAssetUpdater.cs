@@ -70,15 +70,10 @@ namespace TFramework.MasterData.Editor
             var generatedContainers = new List<ScriptableObject>();
             var files = Directory.GetFiles(csvPath, "*.csv");
 
-            // 生成コードのアセンブリ（Assembly-CSharp）を取得
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "Assembly-CSharp");
-
-            if (assembly == null)
-            {
-                TLogger.Error("Assembly-CSharpが見つからないため、型情報を取得できない。", "MasterData");
-                return;
-            }
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            string preferredAssemblyName = settings.GenerateAssemblyDefinition
+                ? settings.AssemblyDefinitionName
+                : "Assembly-CSharp";
 
             foreach (var file in files)
             {
@@ -88,9 +83,9 @@ namespace TFramework.MasterData.Editor
                     string fullClassName = $"Game.MasterData.Generated.{className}";
                     string containerClassName = $"{fullClassName}Container";
 
-                    // 型を取得
-                    var dataClassType = assembly.GetType(fullClassName);
-                    var containerClassType = assembly.GetType(containerClassName);
+                    // 生成asmdef利用時はAssembly-CSharp以外に型が配置されるため、設定名を優先して検索する
+                    var dataClassType = FindGeneratedType(assemblies, preferredAssemblyName, fullClassName);
+                    var containerClassType = FindGeneratedType(assemblies, preferredAssemblyName, containerClassName);
 
                     if (dataClassType == null || containerClassType == null)
                     {
@@ -210,6 +205,36 @@ namespace TFramework.MasterData.Editor
         {
             return !string.IsNullOrEmpty(csvType) &&
                    (csvType == "enum" || csvType.StartsWith("enum:"));
+        }
+
+        private static Type FindGeneratedType(Assembly[] assemblies, string preferredAssemblyName, string fullTypeName)
+        {
+            if (assemblies == null || string.IsNullOrEmpty(fullTypeName))
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(preferredAssemblyName))
+            {
+                Assembly preferredAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == preferredAssemblyName);
+                Type preferredType = preferredAssembly?.GetType(fullTypeName);
+                if (preferredType != null)
+                {
+                    return preferredType;
+                }
+            }
+
+            // 既存プロジェクト互換のため、最終的には全assemblyから対象型を探索する
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                Type type = assemblies[i].GetType(fullTypeName);
+                if (type != null)
+                {
+                    return type;
+                }
+            }
+
+            return null;
         }
 
         private static object GetDefaultValue(Type t)
