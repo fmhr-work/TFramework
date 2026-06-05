@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TFramework.Debug;
 using UnityEngine;
 
 namespace TFramework.MasterData
@@ -16,6 +17,12 @@ namespace TFramework.MasterData
         
         [Tooltip("Asset生成の出力先フォルダ（Assetsからの相対パス）")]
         [SerializeField] private string _assetOutputPath = "Data/MasterData";
+
+        [Tooltip("生成コード用asmdefを自動生成するか")]
+        [SerializeField] private bool _generateAssemblyDefinition = true;
+
+        [Tooltip("生成するasmdef名")]
+        [SerializeField] private string _assemblyDefinitionName = "Game.MasterData.Generated";
 
         [Header("Runtime Settings")]
         [Tooltip("アプリケーション起動時に自動的にすべてのMasterDataをロードするか")]
@@ -45,6 +52,16 @@ namespace TFramework.MasterData
         /// クライアント起動時に自動ロードするかを取得する
         /// </summary>
         public bool AutoLoadOnStartup => _autoLoadOnStartup;
+
+        /// <summary>
+        /// asmdef自動生成が有効かを取得する
+        /// </summary>
+        public bool GenerateAssemblyDefinition => _generateAssemblyDefinition;
+
+        /// <summary>
+        /// 生成するasmdef名を取得する
+        /// </summary>
+        public string AssemblyDefinitionName => _assemblyDefinitionName;
         
         /// <summary>
         /// 登録されているコンテナリストを取得する

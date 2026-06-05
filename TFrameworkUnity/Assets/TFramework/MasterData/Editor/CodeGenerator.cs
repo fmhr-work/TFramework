@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using TFramework.Core;
+using TFramework.Debug;
 using UnityEditor;
 using UnityEngine;
 
@@ -95,6 +96,39 @@ namespace TFramework.MasterData.Editor
             sb.AppendLine("}");
 
             File.WriteAllText(Path.Combine(outputPath, SharedEnumFileName), sb.ToString(), Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// 生成コード用asmdefを出力する
+        /// </summary>
+        public static void GenerateAssemblyDefinitionFile(string outputPath, string assemblyDefinitionName)
+        {
+            if (string.IsNullOrWhiteSpace(assemblyDefinitionName))
+            {
+                TLogger.Warning("asmdef名が未設定のためasmdef生成をスキップする。", "MasterData");
+                return;
+            }
+
+            string filePath = Path.Combine(outputPath, $"{assemblyDefinitionName}.asmdef");
+            string content =
+                "{\n" +
+                $"  \"name\": \"{assemblyDefinitionName}\",\n" +
+                $"  \"rootNamespace\": \"{assemblyDefinitionName}\",\n" +
+                "  \"references\": [\n" +
+                "    \"TFramework.MasterData\"\n" +
+                "  ],\n" +
+                "  \"includePlatforms\": [],\n" +
+                "  \"excludePlatforms\": [],\n" +
+                "  \"allowUnsafeCode\": false,\n" +
+                "  \"overrideReferences\": false,\n" +
+                "  \"precompiledReferences\": [],\n" +
+                "  \"autoReferenced\": true,\n" +
+                "  \"defineConstraints\": [],\n" +
+                "  \"versionDefines\": [],\n" +
+                "  \"noEngineReferences\": false\n" +
+                "}\n";
+
+            File.WriteAllText(filePath, content, Encoding.UTF8);
         }
 
         /// <summary>
@@ -357,7 +391,8 @@ namespace TFramework.MasterData.Editor
         /// </summary>
         private static bool IsEnumType(string csvType)
         {
-            return !string.IsNullOrEmpty(csvType) && (csvType == "enum" || csvType.StartsWith("enum:"));
+            return !string.IsNullOrEmpty(csvType) &&
+                   (csvType == "enum" || csvType.StartsWith("enum:"));
         }
 
         /// <summary>

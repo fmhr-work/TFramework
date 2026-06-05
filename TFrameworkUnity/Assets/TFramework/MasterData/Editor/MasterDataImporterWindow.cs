@@ -181,6 +181,10 @@ namespace TFramework.MasterData.Editor
             {
                 CodeGenerator.GenerateSharedEnumFile(codeOutputPath);
                 CodeGenerator.GenerateServiceExtensions(classNames, codeOutputPath);
+                if (_settings.GenerateAssemblyDefinition)
+                {
+                    CodeGenerator.GenerateAssemblyDefinitionFile(codeOutputPath, _settings.AssemblyDefinitionName);
+                }
             }
 
             if (errorOccurred)
