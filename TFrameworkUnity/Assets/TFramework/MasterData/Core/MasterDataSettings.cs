@@ -98,7 +98,7 @@ namespace TFramework.MasterData
                     if (_instance == null)
                     {
 #if UNITY_EDITOR
-                        UnityEngine.Debug.LogWarning("[TFramework] MasterDataSettings not found in Resources. Using default values.");
+                        TLogger.Warning("MasterDataSettings not found in Resources. Using default values.", "MasterData");
 #endif
                         _instance = CreateInstance<MasterDataSettings>();
                     }

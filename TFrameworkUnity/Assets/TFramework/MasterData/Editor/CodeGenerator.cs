@@ -36,7 +36,7 @@ namespace TFramework.MasterData.Editor
         {
             if (csvData.Count < 3)
             {
-                Debug.LogError($"[MasterData] CSVフォーマットが無効である: {className}");
+                TLogger.Error($"CSVフォーマットが無効である: {className}", "MasterData");
                 return;
             }
 
@@ -177,7 +177,7 @@ namespace TFramework.MasterData.Editor
 
             if (!keyFound)
             {
-                Debug.LogError($"[MasterData] 有効な列が見つからない: {className}");
+                TLogger.Error($"有効な列が見つからない: {className}", "MasterData");
                 return;
             }
 
