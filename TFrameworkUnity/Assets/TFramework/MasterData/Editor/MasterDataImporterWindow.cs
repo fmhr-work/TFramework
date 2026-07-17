@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using TFramework.Debug;
 using UnityEditor;
 using UnityEngine;
@@ -146,7 +147,9 @@ namespace TFramework.MasterData.Editor
                  }
             }
 
-            var files = Directory.GetFiles(csvValuesPath, "*.csv");
+            var files = Directory.GetFiles(csvValuesPath, "*.csv")
+                .OrderBy(file => Path.GetFileName(file), System.StringComparer.Ordinal)
+                .ToArray();
             if (files.Length == 0)
             {
                 TLogger.Warning(".csvファイルが見つからない", "MasterData");
@@ -159,6 +162,32 @@ namespace TFramework.MasterData.Editor
             var classNames = new System.Collections.Generic.List<string>();
             bool errorOccurred = false;
             CodeGenerator.ResetSharedEnumDefinitions();
+
+            string enumCatalogPath = Path.Combine(csvValuesPath, "enum_catalogs");
+            if (Directory.Exists(enumCatalogPath))
+            {
+                var enumCatalogFiles = Directory.GetFiles(enumCatalogPath, "*.csv")
+                    .OrderBy(file => Path.GetFileName(file), System.StringComparer.Ordinal)
+                    .ToArray();
+                foreach (var catalogFile in enumCatalogFiles)
+                {
+                    try
+                    {
+                        var content = File.ReadAllText(catalogFile, System.Text.Encoding.UTF8);
+                        var csvData = CsvParser.Parse(content);
+                        var enumName = Path.GetFileNameWithoutExtension(catalogFile);
+                        if (!CodeGenerator.RegisterSharedEnumCatalog(enumName, csvData))
+                        {
+                            errorOccurred = true;
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        TLogger.Error($"Enumカタログ読込失敗 ({catalogFile}): {e.Message}", e, "MasterData");
+                        errorOccurred = true;
+                    }
+                }
+            }
 
             foreach (var file in files)
             {
