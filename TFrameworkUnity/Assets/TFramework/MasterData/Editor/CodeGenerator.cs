@@ -28,6 +28,50 @@ namespace TFramework.MasterData.Editor
         }
 
         /// <summary>
+        /// 明示的なEnumカタログを共有Enum定義へ登録する
+        /// </summary>
+        public static bool RegisterSharedEnumCatalog(string enumName, List<string[]> csvData)
+        {
+            if (string.IsNullOrWhiteSpace(enumName))
+            {
+                TLogger.Error("Enumカタログ名が空である。", "MasterData");
+                return false;
+            }
+
+            if (csvData == null ||
+                csvData.Count < 2 ||
+                csvData[0].Length < 2 ||
+                !string.Equals(csvData[0][0].Trim(), "value", System.StringComparison.OrdinalIgnoreCase) ||
+                !string.Equals(csvData[0][1].Trim(), "description", System.StringComparison.OrdinalIgnoreCase))
+            {
+                TLogger.Error($"Enumカタログのヘッダーが無効である: {enumName}", "MasterData");
+                return false;
+            }
+
+            HashSet<string> catalogValues = new HashSet<string>();
+            for (int row = 1; row < csvData.Count; row++)
+            {
+                if (csvData[row].Length == 0 || string.IsNullOrWhiteSpace(csvData[row][0]))
+                {
+                    TLogger.Error($"Enumカタログの値が空である: {enumName} row={row + 1}", "MasterData");
+                    return false;
+                }
+
+                catalogValues.Add(MasterDataEnumUtility.NormalizeIdentifier(csvData[row][0]));
+            }
+
+            string normalizedEnumName = MasterDataEnumUtility.NormalizeIdentifier(enumName);
+            if (!SharedEnumDefinitions.TryGetValue(normalizedEnumName, out HashSet<string> values))
+            {
+                values = new HashSet<string>();
+                SharedEnumDefinitions[normalizedEnumName] = values;
+            }
+
+            values.UnionWith(catalogValues);
+            return true;
+        }
+
+        /// <summary>
         /// CSVデータからコードを生成する
         /// </summary>
         public static void GenerateClass(string className, List<string[]> csvData, string outputPath)
